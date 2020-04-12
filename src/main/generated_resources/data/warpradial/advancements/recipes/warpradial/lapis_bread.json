@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "warpradial:lapis_bread"
+    ]
+  },
+  "criteria": {
+    "has_bread": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:bread"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "warpradial:lapis_bread"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bread",
+      "has_the_recipe"
+    ]
+  ]
+}
