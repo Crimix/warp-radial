@@ -1,0 +1,119 @@
+package com.black_dog20.warpradial.common.util;
+
+import com.black_dog20.warpradial.Config;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.ForgeConfigSpec;
+
+public class WarpPlayerProperties {
+
+    private static String FUEL = "warp-radial-fuel";
+
+    public enum Cooldown {
+        GLOBAL(Config.GLOBAL, GLOBAL_COOLDOWN, Config.COOLDOWN_GLOBAL),
+        SPAWN(Config.PER_CATEGORY_COOLDOWN, SPAWN_COOLDOWN, Config.COOLDOWN_SPAWN_WARP),
+        HOME(Config.PER_CATEGORY_COOLDOWN, HOME_COOLDOWN, Config.COOLDOWN_HOME_WARP),
+        PLAYER(Config.PER_CATEGORY_COOLDOWN, PLAYER_WARPS_COOLDOWN, Config.COOLDOWN_PLAYER_WARP),
+        SERVER(Config.PER_CATEGORY_COOLDOWN, SERVER_WARPS_COOLDOWN, Config.COOLDOWN_SERVER_WARP);
+
+        private final int configMode;
+        private final String nbtTagKey;
+        private final ForgeConfigSpec.IntValue ticks;
+
+        Cooldown(int configModeToActive, String nbtTag, ForgeConfigSpec.IntValue cooldownTicks){
+            this.configMode = configModeToActive;
+            this.nbtTagKey = nbtTag;
+            this.ticks = cooldownTicks;
+        }
+
+        public int getConfigMode(){
+            return configMode;
+        }
+
+        public String getTagKey() {
+            return nbtTagKey;
+        }
+
+        public int getTicks() {
+            return ticks.get();
+        }
+
+        public boolean canWarpWithoutFuel() {
+            switch (this) {
+                case GLOBAL:
+                    return false;
+                case SPAWN:
+                    return Config.SPAWN_WARP_WITHOUT_FUEL.get();
+                case HOME:
+                    return Config.HOME_WARP_WITHOUT_FUEL.get();
+                case PLAYER:
+                    return Config.PLAYER_WARP_WITHOUT_FUEL.get();
+                case SERVER:
+                    return Config.SERVER_WARP_WITHOUT_FUEL.get();
+            }
+            return false;
+        }
+    }
+
+    private static String GLOBAL_COOLDOWN = "warp-radial-global-cooldown";
+    private static String HOME_COOLDOWN = "warp-radial-home-cooldown";
+    private static String SPAWN_COOLDOWN = "warp-radial-spawn-cooldown";
+    private static String PLAYER_WARPS_COOLDOWN = "warp-radial-player-warps-cooldown";
+    private static String SERVER_WARPS_COOLDOWN = "warp-radial-fuel-server-warps-cooldown";
+
+    public static double getFuel(PlayerEntity player) {
+        CompoundNBT compound = player.getPersistentData();
+        return !compound.contains(FUEL) ? setFuel(player, 0) : compound.getDouble(FUEL);
+    }
+
+    public static double setFuel(PlayerEntity player, double fuel) {
+        CompoundNBT compound = player.getPersistentData();
+        compound.putDouble(FUEL, fuel);
+        return compound.getDouble(FUEL);
+    }
+
+    public static void addFuel(PlayerEntity player, double fuel) {
+        CompoundNBT compound = player.getPersistentData();
+        double storedFuel = !compound.contains(FUEL) ? 0 : compound.getDouble(FUEL);
+        compound.putDouble(FUEL, storedFuel + fuel);
+    }
+
+    public static boolean hasFuelEnough(PlayerEntity player, Cooldown cooldown) {
+        return cooldown.canWarpWithoutFuel() || getFuel(player) >= 1.0;
+    }
+
+    public static boolean isOnGlobalCooldown(PlayerEntity player, Cooldown cooldown) {
+        if(Cooldown.GLOBAL == cooldown)
+            throw new IllegalStateException("cooldown should not be the global one");
+        if(Config.COOLDOWN_ONLY_WHEN_NO_FUEL.get() && hasFuelEnough(player, cooldown))
+            return false;
+        return Config.COOLDOWN_MODE.get() == Cooldown.GLOBAL.getConfigMode() && getRemainingCooldown(player, Cooldown.GLOBAL) > 0;
+    }
+
+    public static boolean isOnCooldown(PlayerEntity player, Cooldown cooldown) {
+        if(Cooldown.GLOBAL == cooldown)
+            throw new IllegalStateException("cooldown should not be the global one");
+        if(Config.COOLDOWN_ONLY_WHEN_NO_FUEL.get() && hasFuelEnough(player, cooldown))
+            return false;
+        return Config.COOLDOWN_MODE.get() == cooldown.getConfigMode() && getRemainingCooldown(player, cooldown) > 0;
+    }
+
+    public static void setCooldown(PlayerEntity player, Cooldown cooldown) {
+        CompoundNBT compound = player.getPersistentData();
+        if(Cooldown.GLOBAL != cooldown)
+            compound.putLong(cooldown.getTagKey(), System.currentTimeMillis() / 1000);
+        compound.putLong(GLOBAL_COOLDOWN, System.currentTimeMillis() / 1000);
+    }
+
+    public static long getCooldown(PlayerEntity player, Cooldown cooldown) {
+        CompoundNBT compound = player.getPersistentData();
+        return !compound.contains(cooldown.getTagKey()) ? 0 : compound.getLong(cooldown.getTagKey());
+    }
+
+    public static long getRemainingCooldown(PlayerEntity player, Cooldown cooldown) {
+        long currentTime = System.currentTimeMillis() / 1000;
+        long cooldownStart = getCooldown(player, cooldown);
+        long remaining = (cooldown.getTicks() / 20)-(currentTime-cooldownStart);
+        return remaining < 0 ? 0 : remaining;
+    }
+}

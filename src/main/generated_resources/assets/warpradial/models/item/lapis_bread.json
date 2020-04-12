@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "warpradial:item/lapis_bread"
+  }
+}
