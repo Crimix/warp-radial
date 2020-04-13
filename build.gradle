@@ -168,7 +168,7 @@ jar {
 curseforge {
     apiKey = priv.apiKey
     project {
-        id = '1'
+        id = '375446'
         changelogType = 'markdown'
         changelog = file('changelog.txt')
         releaseType = 'release'

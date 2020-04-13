@@ -26,6 +26,14 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        if(!event.getPlayer().world.isRemote) {
+            ServerPlayerEntity playerEntity = (ServerPlayerEntity) event.getPlayer();
+            PacketHandler.sendTo(new PacketSyncPlayerFuel(playerEntity), playerEntity);
+        }
+    }
+
+    @SubscribeEvent
     public static void onServerStarting(FMLServerStartingEvent event) {
         try {
             ServerWorld world = event.getServer().getWorld(DimensionType.getById(0));
