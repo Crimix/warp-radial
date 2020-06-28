@@ -170,23 +170,11 @@ curseforge {
     project {
         id = '375446'
         changelogType = 'markdown'
-        changelog = file('changelog.txt')
+        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/master/CHANGELOG.md)'
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 8'
         addGameVersion '1.15.2'
-    }
-}
-
-task clearChangelog() {
-    doLast{
-        clearFile(file('changelog.txt'))
-    }
-}
-
-def clearFile(File f) {
-    f.withWriter  {
-    	writer -> writer.write('')
     }
 }
 
