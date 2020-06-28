@@ -1,12 +1,16 @@
 package com.black_dog20.warpradial.client.radial.items;
 
-import com.black_dog20.bml.client.radial.api.DrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.client.radial.items.TextRadialCategory;
+import com.black_dog20.bml.client.radial.items.TextRadialItem;
+import com.black_dog20.bml.client.screen.ConfirmInputScreen;
 import com.black_dog20.warpradial.client.ClientDataManager;
 import com.black_dog20.warpradial.common.util.TranslationHelper;
 import com.google.common.collect.ImmutableList;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,30 @@ public class PlayerWarpsRadialCategory extends TextRadialCategory {
     }
 
     @Override
-    public void drawTooltips(DrawingContext context) {
-        GuiUtils.drawHoveringText(ImmutableList.of(TranslationHelper.translateToString(PLAYER_WARPS_TOOLTIP)), (int)context.x, (int)context.y, context.width, context.height, -1, context.fontRenderer);
+    public List<String> getTooltips() {
+        List<String> tooltips = new ArrayList<String>();
+        tooltips.add(TranslationHelper.translateToString(PLAYER_WARPS_TOOLTIP));
+        tooltips.addAll(super.getTooltips());
+        return tooltips;
+    }
+
+    @Override
+    public List<IRadialItem> getContextItems() {
+        IRadialItem add = new TextRadialItem(TranslationHelper.translate(ADD_PLAYER_WARP_TOOLTIP)) {
+            @Override
+            public void click() {
+                ConfirmInputScreen screen = new ConfirmInputScreen(this::onConfirmClick, TranslationHelper.translate(ADD_PLAYER_WARP_TOOLTIP, TextFormatting.BOLD), TranslationHelper.translate(ADD_MESSAGE));
+                Minecraft.getInstance().displayGuiScreen(screen);
+                screen.setButtonDelay(20);
+            }
+
+            private void onConfirmClick(boolean value, String name) {
+                if (value && !StringUtils.isNullOrEmpty(name)) {
+                    Minecraft.getInstance().player.sendChatMessage("/warpradial warp add " + name);
+                }
+                Minecraft.getInstance().displayGuiScreen((Screen) null);
+            }
+        };
+        return ImmutableList.of(add);
     }
 }

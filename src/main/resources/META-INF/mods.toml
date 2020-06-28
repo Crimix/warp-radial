@@ -52,6 +52,6 @@ description='''
 [[dependencies.warpradial]]
     modId="blackdogsmoddinglibrary"
     mandatory=true
-    versionRange="[1.0.8,)"
+    versionRange="[1.0.10,)"
     ordering="BEFORE"
     side="BOTH"

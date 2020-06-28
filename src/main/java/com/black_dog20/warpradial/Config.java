@@ -21,17 +21,12 @@ public class Config {
     public static final int PER_CATEGORY_COOLDOWN = 2;
 
     public static ForgeConfigSpec SERVER_CONFIG;
-    
+
     public static ForgeConfigSpec.BooleanValue PLAYER_WARPS_ALLOWED;
     public static ForgeConfigSpec.BooleanValue WARP_TO_SPAWN_ALLOWED;
     public static ForgeConfigSpec.BooleanValue HOMES_ALLOWED;
     public static ForgeConfigSpec.BooleanValue SERVER_WARPS_ALLOWED;
-    public static ForgeConfigSpec.BooleanValue SPAWN_WARP_WITHOUT_FUEL;
-    public static ForgeConfigSpec.BooleanValue HOME_WARP_WITHOUT_FUEL;
-    public static ForgeConfigSpec.BooleanValue PLAYER_WARP_WITHOUT_FUEL;
-    public static ForgeConfigSpec.BooleanValue SERVER_WARP_WITHOUT_FUEL;
     public static ForgeConfigSpec.IntValue COOLDOWN_MODE;
-    public static ForgeConfigSpec.BooleanValue COOLDOWN_ONLY_WHEN_NO_FUEL;
     public static ForgeConfigSpec.IntValue COOLDOWN_GLOBAL;
     public static ForgeConfigSpec.IntValue COOLDOWN_SPAWN_WARP;
     public static ForgeConfigSpec.IntValue COOLDOWN_HOME_WARP;
@@ -49,16 +44,6 @@ public class Config {
                 .define("playerWarpsAllowed", true);
         SERVER_WARPS_ALLOWED = SERVER_BUILDER.comment("Can server warps be created and warped to")
                 .define("serverWarpsAllowed", true);
-        SPAWN_WARP_WITHOUT_FUEL = SERVER_BUILDER.comment("Can players warp to spawn without using fuel")
-                .define("spawnWarpNotUseFuel", false);
-        HOME_WARP_WITHOUT_FUEL = SERVER_BUILDER.comment("Can players warp to home without using fuel")
-                .define("homeWarpNotUseFuel", false);
-        PLAYER_WARP_WITHOUT_FUEL = SERVER_BUILDER.comment("Can players warp to player warp points without using fuel")
-                .define("playerWarpNotUseFuel", false);
-        SERVER_WARP_WITHOUT_FUEL = SERVER_BUILDER.comment("Can players warp to server warp points without using fuel")
-                .define("serverWarpNotUseFuel", false);
-        COOLDOWN_ONLY_WHEN_NO_FUEL = SERVER_BUILDER.comment("Cooldown is only used when you have not enough fuel", "This does not cost fuel")
-                .define("useCooldownOnlyWhenNoFuel", true);
         COOLDOWN_MODE = SERVER_BUILDER.comment("Cooldown mode", "0 = no cooldown", "1 = global cooldown", "2 = per category cooldown")
                 .defineInRange("warpCooldownMode", PER_CATEGORY_COOLDOWN, 0, 2);
         COOLDOWN_GLOBAL = SERVER_BUILDER.comment("Global cooldown in ticks", "Is only used if cooldownMode = 1")

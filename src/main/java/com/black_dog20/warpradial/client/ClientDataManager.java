@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDataManager {
+    public static boolean IS_OP = false;
     public static List<ClientPlayerDestination> PLAYER_DESTINATION = new ArrayList<>();
     public static List<ClientServerDestination> SERVER_DESTINATION = new ArrayList<>();
 }

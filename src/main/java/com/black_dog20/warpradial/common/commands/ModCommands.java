@@ -23,7 +23,7 @@ public class ModCommands {
 
         LiteralArgumentBuilder<CommandSource> builder = Commands.literal("wr");
         for (ICommand command : COMMANDS) {
-            if (command.shouldBeRegistered())  {
+            if (command.shouldBeRegistered()) {
                 command.register(builder);
             }
         }
@@ -31,7 +31,7 @@ public class ModCommands {
 
         LiteralArgumentBuilder<CommandSource> builder2 = Commands.literal("warpradial");
         for (ICommand command : COMMANDS) {
-            if (command.shouldBeRegistered())  {
+            if (command.shouldBeRegistered()) {
                 command.register(builder2);
             }
         }

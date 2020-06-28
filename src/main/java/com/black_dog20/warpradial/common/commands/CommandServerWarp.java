@@ -4,7 +4,6 @@ import com.black_dog20.bml.utils.player.TeleportDestination;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -13,6 +12,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.command.arguments.MessageArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 
@@ -42,13 +42,13 @@ public class CommandServerWarp implements ICommand {
 
     private ArgumentBuilder<CommandSource, ?> registerSet() {
         return Commands.literal("add")
-                .then(Commands.argument("warpName", StringArgumentType.string())
+                .then(Commands.argument("warpName", MessageArgument.message())
                         .executes(this::set));
     }
 
     private ArgumentBuilder<CommandSource, ?> registerDel() {
         return Commands.literal("remove")
-                .then(Commands.argument("warpName", StringArgumentType.string())
+                .then(Commands.argument("warpName", MessageArgument.message())
                         .suggests(SUGGESTIONS_PROVIDER)
                         .executes(this::del));
     }
@@ -60,7 +60,7 @@ public class CommandServerWarp implements ICommand {
 
     public int set(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
-        String warpName = StringArgumentType.getString(context, "warpName");
+        String warpName = MessageArgument.getMessage(context, "warpName").getFormattedText();
         World world = player.world;
         TeleportDestination destination = new TeleportDestination(world.dimension.getType(), player.getPosition(), player.rotationYaw, player.rotationPitch);
         DataManager.addServerWarp(player, warpName, destination);
@@ -70,7 +70,7 @@ public class CommandServerWarp implements ICommand {
 
     public int del(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
-        String warpName = StringArgumentType.getString(context, "warpName");
+        String warpName = MessageArgument.getMessage(context, "warpName").getFormattedText();
         DataManager.deleteServerWarp(player, warpName);
         context.getSource().sendFeedback(DEL_WARP.getComponent(warpName), true);
         return Command.SINGLE_SUCCESS;

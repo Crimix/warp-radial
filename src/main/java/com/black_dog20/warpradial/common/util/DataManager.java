@@ -56,8 +56,7 @@ public class DataManager {
                 return PLAYER_WARPS.get(UUID);
             else
                 return new ConcurrentHashMap<>();
-        }
-        else
+        } else
             throw new IllegalStateException("Trying to get player warps on non server side");
     }
 

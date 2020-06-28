@@ -20,13 +20,13 @@ public class WarpPlayerProperties {
         private final String nbtTagKey;
         private final ForgeConfigSpec.IntValue ticks;
 
-        Cooldown(int configModeToActive, String nbtTag, ForgeConfigSpec.IntValue cooldownTicks){
+        Cooldown(int configModeToActive, String nbtTag, ForgeConfigSpec.IntValue cooldownTicks) {
             this.configMode = configModeToActive;
             this.nbtTagKey = nbtTag;
             this.ticks = cooldownTicks;
         }
 
-        public int getConfigMode(){
+        public int getConfigMode() {
             return configMode;
         }
 
@@ -37,22 +37,6 @@ public class WarpPlayerProperties {
         public int getTicks() {
             return ticks.get();
         }
-
-        public boolean canWarpWithoutFuel() {
-            switch (this) {
-                case GLOBAL:
-                    return false;
-                case SPAWN:
-                    return Config.SPAWN_WARP_WITHOUT_FUEL.get();
-                case HOME:
-                    return Config.HOME_WARP_WITHOUT_FUEL.get();
-                case PLAYER:
-                    return Config.PLAYER_WARP_WITHOUT_FUEL.get();
-                case SERVER:
-                    return Config.SERVER_WARP_WITHOUT_FUEL.get();
-            }
-            return false;
-        }
     }
 
     private static String GLOBAL_COOLDOWN = "warp-radial-global-cooldown";
@@ -61,46 +45,21 @@ public class WarpPlayerProperties {
     private static String PLAYER_WARPS_COOLDOWN = "warp-radial-player-warps-cooldown";
     private static String SERVER_WARPS_COOLDOWN = "warp-radial-fuel-server-warps-cooldown";
 
-    public static double getFuel(PlayerEntity player) {
-        CompoundNBT compound = player.getPersistentData();
-        return !compound.contains(FUEL) ? setFuel(player, 0) : compound.getDouble(FUEL);
-    }
-
-    public static double setFuel(PlayerEntity player, double fuel) {
-        CompoundNBT compound = player.getPersistentData();
-        compound.putDouble(FUEL, fuel);
-        return compound.getDouble(FUEL);
-    }
-
-    public static void addFuel(PlayerEntity player, double fuel) {
-        CompoundNBT compound = player.getPersistentData();
-        double storedFuel = !compound.contains(FUEL) ? 0 : compound.getDouble(FUEL);
-        compound.putDouble(FUEL, storedFuel + fuel);
-    }
-
-    public static boolean hasFuelEnough(PlayerEntity player, Cooldown cooldown) {
-        return cooldown.canWarpWithoutFuel() || getFuel(player) >= 1.0;
-    }
-
     public static boolean isOnGlobalCooldown(PlayerEntity player, Cooldown cooldown) {
-        if(Cooldown.GLOBAL == cooldown)
+        if (Cooldown.GLOBAL == cooldown)
             throw new IllegalStateException("cooldown should not be the global one");
-        if(Config.COOLDOWN_ONLY_WHEN_NO_FUEL.get() && hasFuelEnough(player, cooldown))
-            return false;
         return Config.COOLDOWN_MODE.get() == Cooldown.GLOBAL.getConfigMode() && getRemainingCooldown(player, Cooldown.GLOBAL) > 0;
     }
 
     public static boolean isOnCooldown(PlayerEntity player, Cooldown cooldown) {
-        if(Cooldown.GLOBAL == cooldown)
+        if (Cooldown.GLOBAL == cooldown)
             throw new IllegalStateException("cooldown should not be the global one");
-        if(Config.COOLDOWN_ONLY_WHEN_NO_FUEL.get() && hasFuelEnough(player, cooldown))
-            return false;
         return Config.COOLDOWN_MODE.get() == cooldown.getConfigMode() && getRemainingCooldown(player, cooldown) > 0;
     }
 
     public static void setCooldown(PlayerEntity player, Cooldown cooldown) {
         CompoundNBT compound = player.getPersistentData();
-        if(Cooldown.GLOBAL != cooldown)
+        if (Cooldown.GLOBAL != cooldown)
             compound.putLong(cooldown.getTagKey(), System.currentTimeMillis() / 1000);
         compound.putLong(GLOBAL_COOLDOWN, System.currentTimeMillis() / 1000);
     }
@@ -113,7 +72,7 @@ public class WarpPlayerProperties {
     public static long getRemainingCooldown(PlayerEntity player, Cooldown cooldown) {
         long currentTime = System.currentTimeMillis() / 1000;
         long cooldownStart = getCooldown(player, cooldown);
-        long remaining = (cooldown.getTicks() / 20)-(currentTime-cooldownStart);
+        long remaining = (cooldown.getTicks() / 20) - (currentTime - cooldownStart);
         return remaining < 0 ? 0 : remaining;
     }
 }

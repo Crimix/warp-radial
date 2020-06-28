@@ -19,12 +19,12 @@ public class PacketTeleportPlayerWarp {
 
     private String warpName;
 
-	public PacketTeleportPlayerWarp(String name) {
-	    this.warpName = name;
+    public PacketTeleportPlayerWarp(String name) {
+        this.warpName = name;
     }
 
     public static void encode(PacketTeleportPlayerWarp msg, PacketBuffer buffer) {
-	    buffer.writeString(msg.warpName);
+        buffer.writeString(msg.warpName);
     }
 
     public static PacketTeleportPlayerWarp decode(PacketBuffer buffer) {
@@ -38,18 +38,17 @@ public class PacketTeleportPlayerWarp {
                 if (player == null)
                     return;
 
-                if(!Config.PLAYER_WARPS_ALLOWED.get())
+                if (!Config.PLAYER_WARPS_ALLOWED.get())
                     return;
 
-                if(!TeleportationHelper.canTeleport(player, Cooldown.PLAYER))
+                if (!TeleportationHelper.canTeleport(player, Cooldown.PLAYER))
                     return;
 
                 Optional<TeleportDestination> warp = DataManager.getPlayerWarpFor(player, msg.warpName);
 
-                if(warp.isPresent()) {
-                    if(TeleportationUtil.teleportPlayerToDestination(player, warp.get())){
+                if (warp.isPresent()) {
+                    if (TeleportationUtil.teleportPlayerToDestination(player, warp.get())) {
                         TeleportationHelper.handleCooldown(player, Cooldown.PLAYER);
-                        TeleportationHelper.handleFuel(player, Cooldown.PLAYER);
                         player.sendMessage(TELPORTED_TO_WARP.getComponent(msg.warpName));
                     } else {
                         player.sendMessage(COULD_NOT_TELEPORT.getComponent());

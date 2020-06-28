@@ -17,7 +17,7 @@ import static com.black_dog20.warpradial.common.util.TranslationHelper.Translati
 
 public class PacketTeleportHome {
 
-	public PacketTeleportHome() {
+    public PacketTeleportHome() {
     }
 
     public static void encode(PacketTeleportHome msg, PacketBuffer buffer) {
@@ -34,18 +34,17 @@ public class PacketTeleportHome {
                 if (player == null)
                     return;
 
-                if(!Config.HOMES_ALLOWED.get())
+                if (!Config.HOMES_ALLOWED.get())
                     return;
 
-                if(!TeleportationHelper.canTeleport(player, Cooldown.HOME))
+                if (!TeleportationHelper.canTeleport(player, Cooldown.HOME))
                     return;
 
                 Optional<TeleportDestination> home = DataManager.getHomeFor(player);
 
-                if(home.isPresent()) {
-                    if(TeleportationUtil.teleportPlayerToDestination(player, home.get())){
+                if (home.isPresent()) {
+                    if (TeleportationUtil.teleportPlayerToDestination(player, home.get())) {
                         TeleportationHelper.handleCooldown(player, Cooldown.HOME);
-                        TeleportationHelper.handleFuel(player, Cooldown.HOME);
                         player.sendMessage(TELPORTED_TO_HOME.getComponent());
                     } else {
                         player.sendMessage(COULD_NOT_TELEPORT.getComponent());

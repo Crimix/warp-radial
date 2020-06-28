@@ -14,7 +14,7 @@ import static com.black_dog20.warpradial.common.util.TranslationHelper.Translati
 
 public class PacketTeleportSpawn {
 
-	public PacketTeleportSpawn() {
+    public PacketTeleportSpawn() {
     }
 
     public static void encode(PacketTeleportSpawn msg, PacketBuffer buffer) {
@@ -31,15 +31,14 @@ public class PacketTeleportSpawn {
                 if (player == null)
                     return;
 
-                if(!Config.WARP_TO_SPAWN_ALLOWED.get())
+                if (!Config.WARP_TO_SPAWN_ALLOWED.get())
                     return;
 
-                if(!TeleportationHelper.canTeleport(player, Cooldown.SPAWN))
+                if (!TeleportationHelper.canTeleport(player, Cooldown.SPAWN))
                     return;
 
-                if(TeleportationUtil.teleportPlayerToSpawn(player)) {
+                if (TeleportationUtil.teleportPlayerToSpawn(player)) {
                     TeleportationHelper.handleCooldown(player, Cooldown.SPAWN);
-                    TeleportationHelper.handleFuel(player, Cooldown.SPAWN);
                     player.sendMessage(TELPORTED_TO_SPAWN.getComponent());
                 } else {
                     player.sendMessage(COULD_NOT_TELEPORT.getComponent());

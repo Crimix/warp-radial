@@ -19,6 +19,7 @@ import static com.black_dog20.warpradial.common.util.TranslationHelper.Translati
 public class CommandHome implements ICommand {
 
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
+
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("home")

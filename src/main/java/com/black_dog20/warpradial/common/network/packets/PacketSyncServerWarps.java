@@ -16,15 +16,15 @@ public class PacketSyncServerWarps {
 
     private List<Pair<String, String>> warps;
 
-	public PacketSyncServerWarps(List<Pair<String, String>> warps) {
-	    this.warps = warps;
+    public PacketSyncServerWarps(List<Pair<String, String>> warps) {
+        this.warps = warps;
     }
 
     public static void encode(PacketSyncServerWarps msg, PacketBuffer buffer) {
-	    buffer.writeInt(msg.warps.size());
-	    for(Pair<String, String> p : msg.warps) {
-	        buffer.writeString(p.getFirst());
-	        buffer.writeString(p.getSecond());
+        buffer.writeInt(msg.warps.size());
+        for (Pair<String, String> p : msg.warps) {
+            buffer.writeString(p.getFirst());
+            buffer.writeString(p.getSecond());
         }
     }
 
@@ -41,8 +41,8 @@ public class PacketSyncServerWarps {
         public static void handle(PacketSyncServerWarps msg, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
                 ClientDataManager.SERVER_DESTINATION.clear();
-                for(Pair<String,String> p : msg.warps) {
-                    ClientDataManager.SERVER_DESTINATION.add(new ClientServerDestination(p.getFirst(),p.getSecond()));
+                for (Pair<String, String> p : msg.warps) {
+                    ClientDataManager.SERVER_DESTINATION.add(new ClientServerDestination(p.getFirst(), p.getSecond()));
                 }
 
             }));

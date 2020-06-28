@@ -33,10 +33,8 @@ public class ClientKeyEvents {
 
         if (mc.currentScreen == null) {
             boolean keyIsDown = isKeyDown(OPEN_WRAP_RADIAL);
-            if (keyIsDown && !keyWasDown)
-            {
-                while (OPEN_WRAP_RADIAL.isPressed())
-                {
+            if (keyIsDown && !keyWasDown) {
+                while (OPEN_WRAP_RADIAL.isPressed()) {
                     mc.displayGuiScreen(new WarpRadialMenu(new StringTextComponent("Wrap menu")));
                 }
             }
@@ -46,8 +44,7 @@ public class ClientKeyEvents {
         }
     }
 
-    public static boolean isKeyDown(KeyBinding keybind)
-    {
+    public static boolean isKeyDown(KeyBinding keybind) {
         if (keybind.isInvalid())
             return false;
         return InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybind.getKey().getKeyCode())

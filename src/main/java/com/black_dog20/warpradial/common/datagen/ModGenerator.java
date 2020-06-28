@@ -12,21 +12,13 @@ public class ModGenerator {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-         if( event.includeServer() )
-            registerServerProviders(event.getGenerator());
-
-        if( event.includeClient() )
+        if (event.includeClient())
             registerClientProviders(event.getGenerator(), event);
-    }
-
-    private static void registerServerProviders(DataGenerator generator) {
-        generator.addProvider(new GeneratorRecipes(generator));
     }
 
     private static void registerClientProviders(DataGenerator generator, GatherDataEvent event) {
         ExistingFileHelper helper = event.getExistingFileHelper();
 
-        generator.addProvider(new GeneratorItemModels(generator, helper));
         generator.addProvider(new GeneratorLanguage(generator));
     }
 

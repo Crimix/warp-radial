@@ -19,7 +19,7 @@ public class PacketTeleportServerWarp {
 
     private String warpName;
 
-	public PacketTeleportServerWarp(String name) {
+    public PacketTeleportServerWarp(String name) {
         this.warpName = name;
     }
 
@@ -38,18 +38,17 @@ public class PacketTeleportServerWarp {
                 if (player == null)
                     return;
 
-                if(!Config.SERVER_WARPS_ALLOWED.get())
+                if (!Config.SERVER_WARPS_ALLOWED.get())
                     return;
 
-                if(!TeleportationHelper.canTeleport(player, Cooldown.SERVER))
+                if (!TeleportationHelper.canTeleport(player, Cooldown.SERVER))
                     return;
 
                 Optional<TeleportDestination> warp = DataManager.getServerWarpFor(msg.warpName);
 
-                if(warp.isPresent()) {
-                    if(TeleportationUtil.teleportPlayerToDestination(player, warp.get())){
+                if (warp.isPresent()) {
+                    if (TeleportationUtil.teleportPlayerToDestination(player, warp.get())) {
                         TeleportationHelper.handleCooldown(player, Cooldown.SERVER);
-                        TeleportationHelper.handleFuel(player, Cooldown.SERVER);
                         player.sendMessage(TELPORTED_TO_WARP.getComponent(msg.warpName));
                     } else {
                         player.sendMessage(COULD_NOT_TELEPORT.getComponent());
