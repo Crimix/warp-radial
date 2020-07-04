@@ -2,6 +2,7 @@ package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.bml.utils.player.TeleportDestination;
 import com.black_dog20.warpradial.Config;
+import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.DataManager;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -33,7 +34,7 @@ public class CommandServerWarp implements ICommand {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("serverwarp")
-                .requires(source -> source.hasPermissionLevel(2))
+                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer())
                 .then(registerSet())
                 .then(registerDel())
         );
@@ -64,7 +65,7 @@ public class CommandServerWarp implements ICommand {
         World world = player.world;
         TeleportDestination destination = new TeleportDestination(world.dimension.getType(), player.getPosition(), player.rotationYaw, player.rotationPitch);
         DataManager.addServerWarp(player, warpName, destination);
-        context.getSource().sendFeedback(SET_WARP.getComponent(warpName), true);
+        context.getSource().sendFeedback(SET_WARP.getComponent(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
@@ -72,7 +73,7 @@ public class CommandServerWarp implements ICommand {
         ServerPlayerEntity player = context.getSource().asPlayer();
         String warpName = MessageArgument.getMessage(context, "warpName").getFormattedText();
         DataManager.deleteServerWarp(player, warpName);
-        context.getSource().sendFeedback(DEL_WARP.getComponent(warpName), true);
+        context.getSource().sendFeedback(DEL_WARP.getComponent(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 }

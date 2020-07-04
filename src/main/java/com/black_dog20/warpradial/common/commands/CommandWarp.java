@@ -68,7 +68,7 @@ public class CommandWarp implements ICommand {
         World world = player.world;
         TeleportDestination destination = new TeleportDestination(world.dimension.getType(), player.getPosition(), player.rotationYaw, player.rotationPitch);
         DataManager.addPlayerWarp(player, warpName, destination);
-        context.getSource().sendFeedback(SET_WARP.getComponent(warpName), true);
+        context.getSource().sendFeedback(SET_WARP.getComponent(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
@@ -76,7 +76,7 @@ public class CommandWarp implements ICommand {
         ServerPlayerEntity player = context.getSource().asPlayer();
         String warpName = MessageArgument.getMessage(context, "warpName").getFormattedText();
         DataManager.deletePlayerWarp(player, warpName);
-        context.getSource().sendFeedback(DEL_WARP.getComponent(warpName), true);
+        context.getSource().sendFeedback(DEL_WARP.getComponent(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 }

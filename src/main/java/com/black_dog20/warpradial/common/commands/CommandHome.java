@@ -40,14 +40,14 @@ public class CommandHome implements ICommand {
         World world = player.world;
         TeleportDestination destination = new TeleportDestination(world.dimension.getType(), player.getPosition(), player.rotationYaw, player.rotationPitch);
         DataManager.setHome(player, destination);
-        context.getSource().sendFeedback(SET_HOME.getComponent(), true);
+        context.getSource().sendFeedback(SET_HOME.getComponent(), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
     public int del(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
         DataManager.deleteHome(player);
-        context.getSource().sendFeedback(DEL_HOME.getComponent(), true);
+        context.getSource().sendFeedback(DEL_HOME.getComponent(), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 }

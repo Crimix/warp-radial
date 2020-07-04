@@ -32,6 +32,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue COOLDOWN_HOME_WARP;
     public static ForgeConfigSpec.IntValue COOLDOWN_PLAYER_WARP;
     public static ForgeConfigSpec.IntValue COOLDOWN_SERVER_WARP;
+    public static ForgeConfigSpec.BooleanValue LOG_WARPS;
 
     static {
 
@@ -56,6 +57,8 @@ public class Config {
                 .defineInRange("playerWarpCooldownTicks", 2400, 0, 72000);
         COOLDOWN_SERVER_WARP = SERVER_BUILDER.comment("Server warps cooldown in ticks", "Is only used if warpCooldownMode = 2")
                 .defineInRange("serverWarpCooldownTicks", 2400, 0, 72000);
+        LOG_WARPS = SERVER_BUILDER.comment("Are warp add or remove logged")
+                .define("logging", true);
         SERVER_BUILDER.pop();
 
         SERVER_CONFIG = SERVER_BUILDER.build();

@@ -133,7 +133,7 @@ repositories {
             password = priv.githubToken
         }
     }
-    //mavenLocal()
+    mavenLocal()
 }
 
 dependencies {

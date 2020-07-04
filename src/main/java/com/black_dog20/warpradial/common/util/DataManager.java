@@ -15,6 +15,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -210,7 +211,7 @@ public class DataManager {
 
         SERVER_WARPS.put(name, destination);
         saveServerWarps(world);
-        syncServerWarpsToClient(playerEntity);
+        syncServerWarpsToClients();
     }
 
     public static void deleteServerWarp(ServerPlayerEntity playerEntity, String name) {
@@ -218,7 +219,7 @@ public class DataManager {
 
         SERVER_WARPS.remove(name);
         saveServerWarps(world);
-        syncServerWarpsToClient(playerEntity);
+        syncServerWarpsToClients();
     }
 
     public static Optional<TeleportDestination> getHomeFor(ServerPlayerEntity player) {
@@ -255,6 +256,14 @@ public class DataManager {
             serverWarps.add(new Pair<>(kvp.getKey(), kvp.getValue().getDimension().getRegistryName().getPath()));
         }
         PacketHandler.sendTo(new PacketSyncServerWarps(serverWarps), playerEntity);
+    }
+
+    public static void syncServerWarpsToClients() {
+        List<Pair<String, String>> serverWarps = new ArrayList<>();
+        for (Map.Entry<String, TeleportDestination> kvp : SERVER_WARPS.entrySet()) {
+            serverWarps.add(new Pair<>(kvp.getKey(), kvp.getValue().getDimension().getRegistryName().getPath()));
+        }
+        PacketHandler.NETWORK.send(PacketDistributor.ALL.noArg(), new PacketSyncServerWarps(serverWarps));
     }
 
     public static void syncPlayerWarpsToClient(ServerPlayerEntity playerEntity) {
