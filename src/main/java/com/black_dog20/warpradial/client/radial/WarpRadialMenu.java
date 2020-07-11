@@ -58,4 +58,9 @@ public class WarpRadialMenu extends AbstractRadialMenu {
     public float getRadiusInModifier() {
         return 1.3f;
     }
+
+    @Override
+    public boolean isScrollInverted() {
+        return Config.RADIAL_SCROLL_INVERTED.get();
+    }
 }

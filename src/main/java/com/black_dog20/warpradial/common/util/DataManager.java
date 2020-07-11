@@ -1,7 +1,6 @@
 package com.black_dog20.warpradial.common.util;
 
 
-import com.black_dog20.bml.utils.player.TeleportDestination;
 import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.network.PacketHandler;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncPlayerWarps;
@@ -10,7 +9,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -22,9 +20,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,25 +27,25 @@ public class DataManager {
 
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 
-    private static ConcurrentHashMap<String, TeleportDestination> HOMES = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<String, ConcurrentHashMap<String, TeleportDestination>> PLAYER_WARPS = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<String, TeleportDestination> SERVER_WARPS = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, WarpDestination> HOMES = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, ConcurrentHashMap<String, WarpDestination>> PLAYER_WARPS = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, WarpDestination> SERVER_WARPS = new ConcurrentHashMap<>();
 
-    public static ConcurrentHashMap<String, TeleportDestination> getHomes() {
+    public static ConcurrentHashMap<String, WarpDestination> getHomes() {
         if (EffectiveSide.get().isServer())
             return HOMES;
         else
             throw new IllegalStateException("Trying to get homes on non server side");
     }
 
-    public static ConcurrentHashMap<String, ConcurrentHashMap<String, TeleportDestination>> getPlayerWarps() {
+    public static ConcurrentHashMap<String, ConcurrentHashMap<String, WarpDestination>> getPlayerWarps() {
         if (EffectiveSide.get().isServer())
             return PLAYER_WARPS;
         else
             throw new IllegalStateException("Trying to get player warps on non server side");
     }
 
-    public static ConcurrentHashMap<String, TeleportDestination> getPlayerWarps(ServerPlayerEntity playerEntity) {
+    public static ConcurrentHashMap<String, WarpDestination> getPlayerWarps(ServerPlayerEntity playerEntity) {
         if (EffectiveSide.get().isServer()) {
             String UUID = playerEntity.getUniqueID().toString();
             if (PLAYER_WARPS.containsKey(UUID))
@@ -61,7 +56,7 @@ public class DataManager {
             throw new IllegalStateException("Trying to get player warps on non server side");
     }
 
-    public static ConcurrentHashMap<String, TeleportDestination> getServerWarps() {
+    public static ConcurrentHashMap<String, WarpDestination> getServerWarps() {
         if (EffectiveSide.get().isServer())
             return SERVER_WARPS;
         else
@@ -73,8 +68,10 @@ public class DataManager {
         File warpDir = new File(dir.getPath() + "/warpradial");
         warpDir.mkdirs();
         File homes = new File(warpDir.getPath() + "/homes.json");
+        if (HOMES != null)
+            HOMES.clear();
         if (homes.exists()) {
-            Type homesType = new TypeToken<ConcurrentHashMap<String, TeleportDestination>>() {
+            Type homesType = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
             }.getType();
             JsonReader reader = new JsonReader(new FileReader(homes));
             HOMES = GSON.fromJson(reader, homesType);
@@ -107,8 +104,10 @@ public class DataManager {
         File warpDir = new File(dir.getPath() + "/warpradial");
         warpDir.mkdirs();
         File playerWarps = new File(warpDir.getPath() + "/playerwarps.json");
+        if (PLAYER_WARPS != null)
+            PLAYER_WARPS.clear();
         if (playerWarps.exists()) {
-            Type playerWarpsType = new TypeToken<ConcurrentHashMap<String, ConcurrentHashMap<String, TeleportDestination>>>() {
+            Type playerWarpsType = new TypeToken<ConcurrentHashMap<String, ConcurrentHashMap<String, WarpDestination>>>() {
             }.getType();
             JsonReader reader = new JsonReader(new FileReader(playerWarps));
             PLAYER_WARPS = GSON.fromJson(reader, playerWarpsType);
@@ -138,8 +137,10 @@ public class DataManager {
         File warpDir = new File(dir.getPath() + "/warpradial");
         warpDir.mkdirs();
         File serverWarps = new File(warpDir.getPath() + "/serverwarps.json");
+        if (SERVER_WARPS != null)
+            SERVER_WARPS.clear();
         if (serverWarps.exists()) {
-            Type serverWarpsType = new TypeToken<ConcurrentHashMap<String, TeleportDestination>>() {
+            Type serverWarpsType = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
             }.getType();
             JsonReader reader = new JsonReader(new FileReader(serverWarps));
             SERVER_WARPS = GSON.fromJson(reader, serverWarpsType);
@@ -164,7 +165,7 @@ public class DataManager {
         }
     }
 
-    public static void setHome(ServerPlayerEntity playerEntity, TeleportDestination destination) {
+    public static void setHome(ServerPlayerEntity playerEntity, WarpDestination destination) {
         ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
         String UUID = playerEntity.getUniqueID().toString();
         HOMES.put(UUID, destination);
@@ -179,11 +180,11 @@ public class DataManager {
         saveHome(world);
     }
 
-    public static void addPlayerWarp(ServerPlayerEntity playerEntity, String name, TeleportDestination destination) {
+    public static void addPlayerWarp(ServerPlayerEntity playerEntity, String name, WarpDestination destination) {
         ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
         String UUID = playerEntity.getUniqueID().toString();
 
-        ConcurrentHashMap<String, TeleportDestination> tempMap = new ConcurrentHashMap<>();
+        ConcurrentHashMap<String, WarpDestination> tempMap = new ConcurrentHashMap<>();
         if (PLAYER_WARPS.containsKey(UUID)) {
             tempMap = PLAYER_WARPS.get(UUID);
         }
@@ -198,7 +199,7 @@ public class DataManager {
         String UUID = playerEntity.getUniqueID().toString();
 
         if (PLAYER_WARPS.containsKey(UUID)) {
-            ConcurrentHashMap<String, TeleportDestination> tempMap = PLAYER_WARPS.get(UUID);
+            ConcurrentHashMap<String, WarpDestination> tempMap = PLAYER_WARPS.get(UUID);
             tempMap.remove(name);
             PLAYER_WARPS.put(UUID, tempMap);
         }
@@ -206,7 +207,7 @@ public class DataManager {
         syncPlayerWarpsToClient(playerEntity);
     }
 
-    public static void addServerWarp(ServerPlayerEntity playerEntity, String name, TeleportDestination destination) {
+    public static void addServerWarp(ServerPlayerEntity playerEntity, String name, WarpDestination destination) {
         ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
 
         SERVER_WARPS.put(name, destination);
@@ -222,7 +223,7 @@ public class DataManager {
         syncServerWarpsToClients();
     }
 
-    public static Optional<TeleportDestination> getHomeFor(ServerPlayerEntity player) {
+    public static Optional<WarpDestination> getHomeFor(ServerPlayerEntity player) {
         String UUID = player.getUniqueID().toString();
         if (HOMES.containsKey(UUID)) {
             return Optional.of(HOMES.get(UUID));
@@ -231,10 +232,10 @@ public class DataManager {
         }
     }
 
-    public static Optional<TeleportDestination> getPlayerWarpFor(ServerPlayerEntity player, String name) {
+    public static Optional<WarpDestination> getPlayerWarpFor(ServerPlayerEntity player, String name) {
         String UUID = player.getUniqueID().toString();
         if (PLAYER_WARPS.containsKey(UUID)) {
-            ConcurrentHashMap<String, TeleportDestination> temp = PLAYER_WARPS.get(UUID);
+            ConcurrentHashMap<String, WarpDestination> temp = PLAYER_WARPS.get(UUID);
             if (temp.containsKey(name)) {
                 return Optional.of(temp.get(name));
             }
@@ -242,7 +243,7 @@ public class DataManager {
         return Optional.empty();
     }
 
-    public static Optional<TeleportDestination> getServerWarpFor(String name) {
+    public static Optional<WarpDestination> getServerWarpFor(String name) {
         if (SERVER_WARPS.containsKey(name)) {
             return Optional.of(SERVER_WARPS.get(name));
         } else {
@@ -251,30 +252,18 @@ public class DataManager {
     }
 
     public static void syncServerWarpsToClient(ServerPlayerEntity playerEntity) {
-        List<Pair<String, String>> serverWarps = new ArrayList<>();
-        for (Map.Entry<String, TeleportDestination> kvp : SERVER_WARPS.entrySet()) {
-            serverWarps.add(new Pair<>(kvp.getKey(), kvp.getValue().getDimension().getRegistryName().getPath()));
-        }
-        PacketHandler.sendTo(new PacketSyncServerWarps(serverWarps), playerEntity);
+        PacketHandler.sendTo(new PacketSyncServerWarps(SERVER_WARPS.entrySet()), playerEntity);
     }
 
     public static void syncServerWarpsToClients() {
-        List<Pair<String, String>> serverWarps = new ArrayList<>();
-        for (Map.Entry<String, TeleportDestination> kvp : SERVER_WARPS.entrySet()) {
-            serverWarps.add(new Pair<>(kvp.getKey(), kvp.getValue().getDimension().getRegistryName().getPath()));
-        }
-        PacketHandler.NETWORK.send(PacketDistributor.ALL.noArg(), new PacketSyncServerWarps(serverWarps));
+        PacketHandler.NETWORK.send(PacketDistributor.ALL.noArg(), new PacketSyncServerWarps(SERVER_WARPS.entrySet()));
     }
 
     public static void syncPlayerWarpsToClient(ServerPlayerEntity playerEntity) {
         String UUID = playerEntity.getUniqueID().toString();
         if (PLAYER_WARPS.containsKey(UUID)) {
-            ConcurrentHashMap<String, TeleportDestination> temp = PLAYER_WARPS.get(UUID);
-            List<Pair<String, String>> warps = new ArrayList<>();
-            for (Map.Entry<String, TeleportDestination> kvp : temp.entrySet()) {
-                warps.add(new Pair<>(kvp.getKey(), kvp.getValue().getDimension().getRegistryName().getPath()));
-            }
-            PacketHandler.sendTo(new PacketSyncPlayerWarps(warps), playerEntity);
+            ConcurrentHashMap<String, WarpDestination> temp = PLAYER_WARPS.get(UUID);
+            PacketHandler.sendTo(new PacketSyncPlayerWarps(temp.entrySet()), playerEntity);
         }
     }
 

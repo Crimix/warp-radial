@@ -24,11 +24,13 @@ public class ClientServerDestination extends TextRadialItem {
 
     private final String name;
     private final String dimensionName;
+    private final long created;
 
-    public ClientServerDestination(String name, String dimensionName) {
+    public ClientServerDestination(String name, String dimensionName, long created) {
         super(new StringTextComponent(name));
         this.name = name;
         this.dimensionName = dimensionName;
+        this.created = created;
     }
 
     @Override
@@ -65,5 +67,13 @@ public class ClientServerDestination extends TextRadialItem {
             }
         };
         return ImmutableList.of(remove);
+    }
+
+    public long getCreated() {
+        return created;
+    }
+
+    public String getName() {
+        return name;
     }
 }

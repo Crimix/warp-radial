@@ -1,10 +1,10 @@
 package com.black_dog20.warpradial.common.network.packets;
 
-import com.black_dog20.bml.utils.player.TeleportDestination;
 import com.black_dog20.bml.utils.player.TeleportationUtil;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
 import com.black_dog20.warpradial.common.util.TeleportationHelper;
+import com.black_dog20.warpradial.common.util.WarpDestination;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -40,7 +40,7 @@ public class PacketTeleportHome {
                 if (!TeleportationHelper.canTeleport(player, Cooldown.HOME))
                     return;
 
-                Optional<TeleportDestination> home = DataManager.getHomeFor(player);
+                Optional<WarpDestination> home = DataManager.getHomeFor(player);
 
                 if (home.isPresent()) {
                     if (TeleportationUtil.teleportPlayerToDestination(player, home.get())) {

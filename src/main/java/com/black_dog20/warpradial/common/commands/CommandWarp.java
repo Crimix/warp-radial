@@ -1,8 +1,8 @@
 package com.black_dog20.warpradial.common.commands;
 
-import com.black_dog20.bml.utils.player.TeleportDestination;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -66,7 +66,7 @@ public class CommandWarp implements ICommand {
         ServerPlayerEntity player = context.getSource().asPlayer();
         String warpName = MessageArgument.getMessage(context, "warpName").getFormattedText();
         World world = player.world;
-        TeleportDestination destination = new TeleportDestination(world.dimension.getType(), player.getPosition(), player.rotationYaw, player.rotationPitch);
+        WarpDestination destination = new WarpDestination(world.dimension.getType(), player);
         DataManager.addPlayerWarp(player, warpName, destination);
         context.getSource().sendFeedback(SET_WARP.getComponent(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;

@@ -14,13 +14,17 @@ public class Config {
 
     public static final String CATEGORY_GENERAL = "general";
 
+    private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
     private static final ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
 
     public static final int GLOBAL = 1;
     public static final int NO_COOLDOWN = 0;
     public static final int PER_CATEGORY_COOLDOWN = 2;
 
+    public static ForgeConfigSpec CLIENT_CONFIG;
     public static ForgeConfigSpec SERVER_CONFIG;
+
+    public static ForgeConfigSpec.BooleanValue RADIAL_SCROLL_INVERTED;
 
     public static ForgeConfigSpec.BooleanValue PLAYER_WARPS_ALLOWED;
     public static ForgeConfigSpec.BooleanValue WARP_TO_SPAWN_ALLOWED;
@@ -35,6 +39,12 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue LOG_WARPS;
 
     static {
+
+        CLIENT_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
+        RADIAL_SCROLL_INVERTED = SERVER_BUILDER.comment("Is scrolling inverted for the radial menu")
+                .define("invertedScroll", false);
+        CLIENT_BUILDER.pop();
+        CLIENT_CONFIG = CLIENT_BUILDER.build();
 
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         HOMES_ALLOWED = SERVER_BUILDER.comment("Can homes be created and warped to")

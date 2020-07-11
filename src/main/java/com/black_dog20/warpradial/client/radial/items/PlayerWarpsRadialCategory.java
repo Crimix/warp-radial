@@ -13,7 +13,9 @@ import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.*;
 
@@ -25,7 +27,9 @@ public class PlayerWarpsRadialCategory extends TextRadialCategory {
 
     @Override
     public List<IRadialItem> getItems() {
-        return new ArrayList<IRadialItem>(ClientDataManager.PLAYER_DESTINATION);
+        return ClientDataManager.PLAYER_DESTINATION.stream()
+                .sorted(Comparator.comparing(ClientPlayerDestination::getCreated).thenComparing(ClientPlayerDestination::getName))
+                .collect(Collectors.toList());
     }
 
     @Override
