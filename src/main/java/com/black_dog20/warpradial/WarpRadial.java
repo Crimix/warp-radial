@@ -1,19 +1,19 @@
 package com.black_dog20.warpradial;
 
-import com.black_dog20.warpradial.client.events.ClientKeyEvents;
+import com.black_dog20.warpradial.client.keybinds.Keybinds;
 import com.black_dog20.warpradial.common.network.PacketHandler;
 import com.black_dog20.warpradial.common.proxy.ClientProxy;
 import com.black_dog20.warpradial.common.proxy.IProxy;
 import com.black_dog20.warpradial.common.proxy.ServerProxy;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +34,7 @@ public class WarpRadial {
         Proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
         event.addListener(this::setup);
-        event.addListener(this::loadComplete);
+        event.addListener(this::setupClient);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -42,8 +42,8 @@ public class WarpRadial {
         PacketHandler.register();
     }
 
-    public void loadComplete(FMLLoadCompleteEvent event) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientKeyEvents::init);
+    private void setupClient(final FMLClientSetupEvent event) {
+        ClientRegistry.registerKeyBinding(Keybinds.openWarpMenu);
     }
 
     public static Logger getLogger() {

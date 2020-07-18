@@ -3,7 +3,8 @@ package com.black_dog20.warpradial.common.events;
 import com.black_dog20.bml.event.PlayerOpChangeEvent;
 import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.network.PacketHandler;
-import com.black_dog20.warpradial.common.network.packets.PacketOpCheck;
+import com.black_dog20.warpradial.common.network.packets.PacketOpSync;
+import com.black_dog20.warpradial.common.network.packets.PacketSyncPermissions;
 import com.black_dog20.warpradial.common.util.DataManager;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
@@ -25,7 +26,8 @@ public class ServerEvents {
             DataManager.syncServerWarpsToClient(playerEntity);
 
             boolean isOp = ServerLifecycleHooks.getCurrentServer().getPlayerList().canSendCommands(playerEntity.getGameProfile());
-            PacketHandler.sendTo(new PacketOpCheck(isOp), playerEntity);
+            PacketHandler.sendTo(new PacketOpSync(isOp), playerEntity);
+            PacketHandler.sendTo(new PacketSyncPermissions(DataManager.getPlayerPermission(playerEntity)), playerEntity);
         }
     }
 
@@ -37,6 +39,7 @@ public class ServerEvents {
             DataManager.loadHomes(world);
             DataManager.loadPlayerWarps(world);
             DataManager.loadServerWarps(world);
+            DataManager.loadPlayerPermissions(world);
         } catch (Exception e) {
             WarpRadial.getLogger().error(e.getMessage());
         }
@@ -44,6 +47,6 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void onPlayerChangeOpStatus(PlayerOpChangeEvent event) {
-        PacketHandler.sendTo(new PacketOpCheck(event.getNewStatus()), (ServerPlayerEntity) event.getPlayer());
+        PacketHandler.sendTo(new PacketOpSync(event.getNewStatus()), (ServerPlayerEntity) event.getPlayer());
     }
 }

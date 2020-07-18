@@ -1,7 +1,8 @@
 package com.black_dog20.warpradial.common.network;
 
 import com.black_dog20.warpradial.WarpRadial;
-import com.black_dog20.warpradial.common.network.packets.PacketOpCheck;
+import com.black_dog20.warpradial.common.network.packets.PacketOpSync;
+import com.black_dog20.warpradial.common.network.packets.PacketSyncPermissions;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncPlayerWarps;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncServerWarps;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportHome;
@@ -42,7 +43,8 @@ public class PacketHandler {
         registerMessage(PacketTeleportServerWarp.class, PacketTeleportServerWarp::encode, PacketTeleportServerWarp::decode, PacketTeleportServerWarp.Handler::handle);
         registerMessage(PacketSyncPlayerWarps.class, PacketSyncPlayerWarps::encode, PacketSyncPlayerWarps::decode, PacketSyncPlayerWarps.Handler::handle);
         registerMessage(PacketSyncServerWarps.class, PacketSyncServerWarps::encode, PacketSyncServerWarps::decode, PacketSyncServerWarps.Handler::handle);
-        registerMessage(PacketOpCheck.class, PacketOpCheck::encode, PacketOpCheck::decode, PacketOpCheck.Handler::handle);
+        registerMessage(PacketOpSync.class, PacketOpSync::encode, PacketOpSync::decode, PacketOpSync.Handler::handle);
+        registerMessage(PacketSyncPermissions.class, PacketSyncPermissions::encode, PacketSyncPermissions::decode, PacketSyncPermissions.Handler::handle);
     }
 
     public static void sendTo(Object msg, ServerPlayerEntity player) {

@@ -3,7 +3,7 @@ package com.black_dog20.warpradial.common.commands;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.DataManager;
-import com.black_dog20.warpradial.common.util.WarpDestination;
+import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -34,7 +34,7 @@ public class CommandServerWarp implements ICommand {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("serverwarp")
-                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer())
+                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || canCreateOrDelete(source))
                 .then(registerSet())
                 .then(registerDel())
         );
@@ -43,12 +43,14 @@ public class CommandServerWarp implements ICommand {
 
     private ArgumentBuilder<CommandSource, ?> registerSet() {
         return Commands.literal("add")
+                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || canCreate(source))
                 .then(Commands.argument("warpName", MessageArgument.message())
                         .executes(this::set));
     }
 
     private ArgumentBuilder<CommandSource, ?> registerDel() {
         return Commands.literal("remove")
+                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || canCreate(source))
                 .then(Commands.argument("warpName", MessageArgument.message())
                         .suggests(SUGGESTIONS_PROVIDER)
                         .executes(this::del));
@@ -75,5 +77,25 @@ public class CommandServerWarp implements ICommand {
         DataManager.deleteServerWarp(player, warpName);
         context.getSource().sendFeedback(DEL_WARP.getComponent(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
+    }
+
+    private boolean canCreateOrDelete(CommandSource source) {
+        return canCreate(source) || canDelete(source);
+    }
+
+    private boolean canCreate(CommandSource source) {
+        try {
+            return DataManager.getPlayerPermission(source.asPlayer()).canCreateServerWarps();
+        } catch (CommandSyntaxException e) {
+            return false;
+        }
+    }
+
+    private boolean canDelete(CommandSource source) {
+        try {
+            return DataManager.getPlayerPermission(source.asPlayer()).canDeleteServerWarps();
+        } catch (CommandSyntaxException e) {
+            return false;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.black_dog20.warpradial.common.util;
+package com.black_dog20.warpradial.common.util.data;
 
 import com.black_dog20.bml.utils.player.TeleportDestination;
 import net.minecraft.entity.player.ServerPlayerEntity;

@@ -8,24 +8,24 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketOpCheck {
+public class PacketOpSync {
 
     private boolean isOp;
 
-    public PacketOpCheck(boolean isOp) {
+    public PacketOpSync(boolean isOp) {
         this.isOp = isOp;
     }
 
-    public static void encode(PacketOpCheck msg, PacketBuffer buffer) {
+    public static void encode(PacketOpSync msg, PacketBuffer buffer) {
         buffer.writeBoolean(msg.isOp);
     }
 
-    public static PacketOpCheck decode(PacketBuffer buffer) {
-        return new PacketOpCheck(buffer.readBoolean());
+    public static PacketOpSync decode(PacketBuffer buffer) {
+        return new PacketOpSync(buffer.readBoolean());
     }
 
     public static class Handler {
-        public static void handle(PacketOpCheck msg, Supplier<NetworkEvent.Context> ctx) {
+        public static void handle(PacketOpSync msg, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
                 ClientDataManager.IS_OP = msg.isOp;
             }));

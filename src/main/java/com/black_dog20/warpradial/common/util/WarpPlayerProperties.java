@@ -7,8 +7,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class WarpPlayerProperties {
 
-    private static String FUEL = "warp-radial-fuel";
-
     public enum Cooldown {
         GLOBAL(Config.GLOBAL, GLOBAL_COOLDOWN, Config.COOLDOWN_GLOBAL),
         SPAWN(Config.PER_CATEGORY_COOLDOWN, SPAWN_COOLDOWN, Config.COOLDOWN_SPAWN_WARP),

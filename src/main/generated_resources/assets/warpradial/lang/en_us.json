@@ -1,6 +1,10 @@
 {
   "warpradial.key.category": "Warp Radial",
   "warpradial.key.radial.open": "Open Warp Radial",
+  "warpradial.msg.can_create_server_warps_added": "Granted %s permission to create server warps",
+  "warpradial.msg.can_create_server_warps_removed": "Reworked %s's permission to create server warps",
+  "warpradial.msg.can_delete_server_warps_added": "Granted %s permission to delete server warps",
+  "warpradial.msg.can_delete_server_warps_removed": "Reworked %s's permission to delete server warps",
   "warpradial.msg.cooldown": "Could not teleport, you are on cooldown",
   "warpradial.msg.cooldown_2": "Remaining cooldown: %ds",
   "warpradial.msg.home.del": "Home removed!",

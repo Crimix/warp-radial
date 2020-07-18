@@ -50,5 +50,9 @@ public class GeneratorLanguage extends BaseLanguageProvider {
         addPrefixed(TELPORTED_TO_WARP, "Teleported to %s!");
         addPrefixed(NO_WARP, "Warp point %s does not exist!");
         addPrefixed(COULD_NOT_TELEPORT, "Failed to teleport!");
+        addPrefixed(PERMISSIONS_CAN_CREATE_ADDED, "Granted %s permission to create server warps");
+        addPrefixed(PERMISSIONS_CAN_CREATE_REMOVED, "Reworked %s's permission to create server warps");
+        addPrefixed(PERMISSIONS_CAN_DELETE_ADDED, "Granted %s permission to delete server warps");
+        addPrefixed(PERMISSIONS_CAN_DELETE_REMOVED, "Reworked %s's permission to delete server warps");
     }
 }

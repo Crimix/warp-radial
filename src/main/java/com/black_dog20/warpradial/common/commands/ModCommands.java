@@ -15,10 +15,11 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = WarpRadial.MOD_ID)
 public class ModCommands {
 
-    private static List<ICommand> COMMANDS = ImmutableList.of(new CommandHome(), new CommandWarp(), new CommandServerWarp());
+    private static List<ICommand> COMMANDS = ImmutableList.of(new CommandHome(), new CommandWarp(), new CommandServerWarp(), new CommandPermission());
 
     @SubscribeEvent
     public static void onServerStarting(FMLServerStartingEvent event) {
+
         CommandDispatcher<CommandSource> dispatcher = event.getCommandDispatcher();
 
         LiteralArgumentBuilder<CommandSource> builder = Commands.literal("wr");

@@ -2,13 +2,13 @@ package com.black_dog20.warpradial.client.radial;
 
 import com.black_dog20.bml.client.radial.api.AbstractRadialMenu;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
+import com.black_dog20.bml.utils.keybinds.KeybindsUtil;
 import com.black_dog20.warpradial.Config;
-import com.black_dog20.warpradial.client.events.ClientKeyEvents;
+import com.black_dog20.warpradial.client.keybinds.Keybinds;
 import com.black_dog20.warpradial.client.radial.items.HomeRadialItem;
 import com.black_dog20.warpradial.client.radial.items.PlayerWarpsRadialCategory;
 import com.black_dog20.warpradial.client.radial.items.ServerWarpsRadialCategory;
 import com.black_dog20.warpradial.client.radial.items.SpawnRadialItem;
-import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class WarpRadialMenu extends AbstractRadialMenu {
 
     @Override
     public boolean isKeyDown() {
-        return InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), ClientKeyEvents.OPEN_WRAP_RADIAL.getKey().getKeyCode());
+        return KeybindsUtil.isKeyDown(Keybinds.openWarpMenu);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.black_dog20.warpradial.common.network.packets;
 
 import com.black_dog20.warpradial.client.ClientDataManager;
 import com.black_dog20.warpradial.client.radial.items.ClientServerDestination;
-import com.black_dog20.warpradial.common.util.WarpDestination;
+import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;

@@ -1,14 +1,14 @@
 package com.black_dog20.warpradial.common.util;
 
 
-import com.black_dog20.warpradial.WarpRadial;
+import com.black_dog20.bml.utils.file.FileUtil;
 import com.black_dog20.warpradial.common.network.PacketHandler;
+import com.black_dog20.warpradial.common.network.packets.PacketSyncPermissions;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncPlayerWarps;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncServerWarps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
+import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -17,19 +17,18 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public class DataManager {
-
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 
     private static ConcurrentHashMap<String, WarpDestination> HOMES = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, ConcurrentHashMap<String, WarpDestination>> PLAYER_WARPS = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, WarpDestination> SERVER_WARPS = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, PlayerPermissions> PLAYER_PERMISIONS = new ConcurrentHashMap<>();
 
     public static ConcurrentHashMap<String, WarpDestination> getHomes() {
         if (EffectiveSide.get().isServer())
@@ -63,106 +62,60 @@ public class DataManager {
             throw new IllegalStateException("Trying to get server warps on non server side");
     }
 
-    public static void loadHomes(ServerWorld world) throws FileNotFoundException {
-        File dir = world.getSaveHandler().getWorldDirectory();
-        File warpDir = new File(dir.getPath() + "/warpradial");
-        warpDir.mkdirs();
-        File homes = new File(warpDir.getPath() + "/homes.json");
-        if (HOMES != null)
-            HOMES.clear();
-        if (homes.exists()) {
-            Type homesType = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
-            }.getType();
-            JsonReader reader = new JsonReader(new FileReader(homes));
-            HOMES = GSON.fromJson(reader, homesType);
-            if (HOMES == null) {
-                HOMES = new ConcurrentHashMap<>();
-            }
-        }
+    public static void loadHomes(ServerWorld world) {
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
+        }.getType();
+        HOMES = FileUtil.load(warpDir, "/homes.json", type, ConcurrentHashMap::new);
     }
 
     public static boolean saveHome(ServerWorld world) {
-        try {
-            File dir = world.getSaveHandler().getWorldDirectory();
-            File warpDir = new File(dir.getPath() + "/warpradial");
-            warpDir.mkdirs();
-
-            File homes = new File(warpDir.getPath() + "/homes.json");
-            FileWriter writer = new FileWriter(homes);
-            GSON.toJson(HOMES, writer);
-            writer.close();
-
-            return true;
-        } catch (Exception e) {
-            WarpRadial.getLogger().error(e.getMessage());
-            return false;
-        }
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
+        }.getType();
+        return FileUtil.save(warpDir, "/homes.json", HOMES, type);
     }
 
-    public static void loadPlayerWarps(ServerWorld world) throws FileNotFoundException {
-        File dir = world.getSaveHandler().getWorldDirectory();
-        File warpDir = new File(dir.getPath() + "/warpradial");
-        warpDir.mkdirs();
-        File playerWarps = new File(warpDir.getPath() + "/playerwarps.json");
-        if (PLAYER_WARPS != null)
-            PLAYER_WARPS.clear();
-        if (playerWarps.exists()) {
-            Type playerWarpsType = new TypeToken<ConcurrentHashMap<String, ConcurrentHashMap<String, WarpDestination>>>() {
-            }.getType();
-            JsonReader reader = new JsonReader(new FileReader(playerWarps));
-            PLAYER_WARPS = GSON.fromJson(reader, playerWarpsType);
-        }
+    public static void loadPlayerWarps(ServerWorld world) {
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<String, ConcurrentHashMap<String, WarpDestination>>>() {
+        }.getType();
+        PLAYER_WARPS = FileUtil.load(warpDir, "/playerwarps.json", type, ConcurrentHashMap::new);
     }
 
     public static boolean savePlayerWarps(ServerWorld world) {
-        try {
-            File dir = world.getSaveHandler().getWorldDirectory();
-            File warpDir = new File(dir.getPath() + "/warpradial");
-            warpDir.mkdirs();
-
-            File playerWarps = new File(warpDir.getPath() + "/playerwarps.json");
-            FileWriter writer = new FileWriter(playerWarps);
-            GSON.toJson(PLAYER_WARPS, writer);
-            writer.close();
-
-            return true;
-        } catch (Exception e) {
-            WarpRadial.getLogger().error(e.getMessage());
-            return false;
-        }
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<String, ConcurrentHashMap<String, WarpDestination>>>() {
+        }.getType();
+        return FileUtil.save(warpDir, "/playerwarps.json", PLAYER_WARPS, type);
     }
 
     public static void loadServerWarps(ServerWorld world) throws FileNotFoundException {
-        File dir = world.getSaveHandler().getWorldDirectory();
-        File warpDir = new File(dir.getPath() + "/warpradial");
-        warpDir.mkdirs();
-        File serverWarps = new File(warpDir.getPath() + "/serverwarps.json");
-        if (SERVER_WARPS != null)
-            SERVER_WARPS.clear();
-        if (serverWarps.exists()) {
-            Type serverWarpsType = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
-            }.getType();
-            JsonReader reader = new JsonReader(new FileReader(serverWarps));
-            SERVER_WARPS = GSON.fromJson(reader, serverWarpsType);
-        }
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
+        }.getType();
+        SERVER_WARPS = FileUtil.load(warpDir, "/serverwarps.json", type, ConcurrentHashMap::new);
     }
 
     public static boolean saveServerWarps(ServerWorld world) {
-        try {
-            File dir = world.getSaveHandler().getWorldDirectory();
-            File warpDir = new File(dir.getPath() + "/warpradial");
-            warpDir.mkdirs();
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<String, WarpDestination>>() {
+        }.getType();
+        return FileUtil.save(warpDir, "/serverwarps.json", SERVER_WARPS, type);
+    }
 
-            File serverWarps = new File(warpDir.getPath() + "/serverwarps.json");
-            FileWriter writer = new FileWriter(serverWarps);
-            GSON.toJson(SERVER_WARPS, writer);
-            writer.close();
+    public static void loadPlayerPermissions(ServerWorld world) {
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<UUID, PlayerPermissions>>() {
+        }.getType();
+        PLAYER_PERMISIONS = FileUtil.load(warpDir, "/permissions.json", type, ConcurrentHashMap::new);
+    }
 
-            return true;
-        } catch (Exception e) {
-            WarpRadial.getLogger().error(e.getMessage());
-            return false;
-        }
+    public static boolean savePlayerPermissions(ServerWorld world) {
+        File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
+        Type type = new TypeToken<ConcurrentHashMap<UUID, PlayerPermissions>>() {
+        }.getType();
+        return FileUtil.save(warpDir, "/permissions.json", PLAYER_PERMISIONS, type);
     }
 
     public static void setHome(ServerPlayerEntity playerEntity, WarpDestination destination) {
@@ -265,6 +218,27 @@ public class DataManager {
             ConcurrentHashMap<String, WarpDestination> temp = PLAYER_WARPS.get(UUID);
             PacketHandler.sendTo(new PacketSyncPlayerWarps(temp.entrySet()), playerEntity);
         }
+    }
+
+    public static void addPlayerPermission(ServerPlayerEntity playerEntity, Function<PlayerPermissions, PlayerPermissions> function) {
+        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+        String uuid = playerEntity.getUniqueID().toString();
+        PlayerPermissions playerPermissions = getPlayerPermission(playerEntity);
+        playerPermissions = function.apply(playerPermissions);
+        PLAYER_PERMISIONS.put(uuid, playerPermissions);
+        savePlayerPermissions(world);
+        syncPermissionsToClient(playerEntity);
+    }
+
+    public static PlayerPermissions getPlayerPermission(ServerPlayerEntity playerEntity) {
+        String uuid = playerEntity.getUniqueID().toString();
+        String name = playerEntity.getDisplayName().getFormattedText();
+        return PLAYER_PERMISIONS.getOrDefault(uuid, new PlayerPermissions(uuid, name, false, false));
+    }
+
+    public static void syncPermissionsToClient(ServerPlayerEntity playerEntity) {
+        PlayerPermissions playerPermissions = getPlayerPermission(playerEntity);
+        PacketHandler.sendTo(new PacketSyncPermissions(playerPermissions), playerEntity);
     }
 
 }

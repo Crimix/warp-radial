@@ -2,9 +2,7 @@ package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
-import com.black_dog20.warpradial.common.util.WarpDestination;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -17,8 +15,6 @@ import net.minecraft.world.World;
 import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.*;
 
 public class CommandHome implements ICommand {
-
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {

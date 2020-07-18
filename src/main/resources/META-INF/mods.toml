@@ -28,6 +28,6 @@ description='''Commands are fine, but have you seen this radial menu, it rocks''
 [[dependencies.warpradial]]
     modId="blackdogsmoddinglibrary"
     mandatory=true
-    versionRange="[1.0.12,)"
+    versionRange="[1.0.14,)"
     ordering="BEFORE"
     side="BOTH"

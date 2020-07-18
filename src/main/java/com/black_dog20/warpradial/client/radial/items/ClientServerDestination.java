@@ -7,6 +7,7 @@ import com.black_dog20.warpradial.client.ClientDataManager;
 import com.black_dog20.warpradial.common.network.PacketHandler;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportServerWarp;
 import com.black_dog20.warpradial.common.util.TranslationHelper;
+import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -49,7 +50,10 @@ public class ClientServerDestination extends TextRadialItem {
 
     @Override
     public List<IRadialItem> getContextItems() {
-        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP))
+        boolean canDelete = ClientDataManager.PLAYER_PERMISSION
+                .map(PlayerPermissions::canDeleteServerWarps)
+                .orElse(false);
+        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP || canDelete))
             return Collections.emptyList();
         IRadialItem remove = new TextRadialItem(TranslationHelper.translate(REMOVE_SERVER_WARP_TOOLTIP)) {
             @Override

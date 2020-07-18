@@ -6,6 +6,7 @@ import com.black_dog20.bml.client.radial.items.TextRadialItem;
 import com.black_dog20.bml.client.screen.ConfirmInputScreen;
 import com.black_dog20.warpradial.client.ClientDataManager;
 import com.black_dog20.warpradial.common.util.TranslationHelper;
+import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -48,7 +49,10 @@ public class ServerWarpsRadialCategory extends TextRadialCategory {
 
     @Override
     public List<IRadialItem> getContextItems() {
-        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP))
+        boolean canCreate = ClientDataManager.PLAYER_PERMISSION
+                .map(PlayerPermissions::canCreateServerWarps)
+                .orElse(false);
+        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP || canCreate))
             return Collections.emptyList();
         IRadialItem add = new TextRadialItem(TranslationHelper.translate(ADD_SERVER_WARP_TOOLTIP)) {
             @Override
