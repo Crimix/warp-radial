@@ -41,7 +41,7 @@ public class Config {
     static {
 
         CLIENT_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
-        RADIAL_SCROLL_INVERTED = SERVER_BUILDER.comment("Is scrolling inverted for the radial menu")
+        RADIAL_SCROLL_INVERTED = CLIENT_BUILDER.comment("Is scrolling inverted for the radial menu")
                 .define("invertedScroll", false);
         CLIENT_BUILDER.pop();
         CLIENT_CONFIG = CLIENT_BUILDER.build();

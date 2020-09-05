@@ -26,7 +26,7 @@ public class CommandPermission implements ICommand {
     }
 
     private ArgumentBuilder<CommandSource, ?> serverWarps() {
-        return Commands.literal("serverWarps")
+        return Commands.literal("serverwarp")
                 .then(Commands.literal("create")
                         .then(Commands.argument("playerName", EntityArgument.player())
                                 .then(Commands.argument("value", BoolArgumentType.bool())
