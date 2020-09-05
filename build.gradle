@@ -175,6 +175,9 @@ curseforge {
         addGameVersion 'Forge'
         addGameVersion 'Java 8'
         addGameVersion '1.15.2'
+        relations {
+            requiredDependency 'bml'
+        }
     }
 }
 
