@@ -49,11 +49,9 @@ public class ServerWarpsRadialCategory extends TextRadialCategory {
 
     @Override
     public List<IRadialItem> getContextItems() {
-        boolean canCreate = ClientDataManager.PLAYER_PERMISSION
-                .map(PlayerPermissions::canCreateServerWarps)
-                .orElse(false);
-        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP || canCreate))
+        if (!ClientDataManager.getPermissionOrOpOrSP(PlayerPermissions::canCreateServerWarps))
             return Collections.emptyList();
+
         IRadialItem add = new TextRadialItem(TranslationHelper.translate(ADD_SERVER_WARP_TOOLTIP)) {
             @Override
             public void click() {

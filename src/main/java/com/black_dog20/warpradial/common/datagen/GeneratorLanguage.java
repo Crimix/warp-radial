@@ -54,5 +54,8 @@ public class GeneratorLanguage extends BaseLanguageProvider {
         addPrefixed(PERMISSIONS_CAN_CREATE_REMOVED, "Reworked %s's permission to create server warps");
         addPrefixed(PERMISSIONS_CAN_DELETE_ADDED, "Granted %s permission to delete server warps");
         addPrefixed(PERMISSIONS_CAN_DELETE_REMOVED, "Reworked %s's permission to delete server warps");
+        addPrefixed(PERMISSIONS_CAN_USE_ADDED, "Granted %s permission to use radial menu");
+        addPrefixed(PERMISSIONS_CAN_USE_REMOVED, "Reworked %s's permission to use radial menu");
+        addPrefixed(DENIED_MENU_USE, "You do not have the required permissions to use the warp menu");
     }
 }

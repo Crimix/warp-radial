@@ -2,6 +2,7 @@ package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.PermissionHelper;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -38,7 +39,7 @@ public class CommandWarp implements ICommand {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("warp")
-                .requires(source -> source.hasPermissionLevel(0))
+                .requires(source -> source.hasPermissionLevel(0) && PermissionHelper.onlyOpsRuleNotActiveOrCanUse(source))
                 .then(registerSet())
                 .then(registerDel())
         );

@@ -23,10 +23,11 @@ public class PacketSyncPermissions {
         buffer.writeString(msg.permissions.getDisplayName());
         buffer.writeBoolean(msg.permissions.canCreateServerWarps());
         buffer.writeBoolean(msg.permissions.canDeleteServerWarps());
+        buffer.writeBoolean(msg.permissions.canUseMenu());
     }
 
     public static PacketSyncPermissions decode(PacketBuffer buffer) {
-        return new PacketSyncPermissions(new PlayerPermissions(buffer.readString(32767), buffer.readString(32767), buffer.readBoolean(), buffer.readBoolean()));
+        return new PacketSyncPermissions(new PlayerPermissions(buffer.readString(32767), buffer.readString(32767), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean()));
     }
 
     public static class Handler {

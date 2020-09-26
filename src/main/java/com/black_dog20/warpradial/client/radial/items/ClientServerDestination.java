@@ -50,11 +50,9 @@ public class ClientServerDestination extends TextRadialItem {
 
     @Override
     public List<IRadialItem> getContextItems() {
-        boolean canDelete = ClientDataManager.PLAYER_PERMISSION
-                .map(PlayerPermissions::canDeleteServerWarps)
-                .orElse(false);
-        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP || canDelete))
+        if (!ClientDataManager.getPermissionOrOpOrSP(PlayerPermissions::canDeleteServerWarps))
             return Collections.emptyList();
+
         IRadialItem remove = new TextRadialItem(TranslationHelper.translate(REMOVE_SERVER_WARP_TOOLTIP)) {
             @Override
             public void click() {

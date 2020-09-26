@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -106,14 +105,14 @@ public class DataManager {
 
     public static void loadPlayerPermissions(ServerWorld world) {
         File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
-        Type type = new TypeToken<ConcurrentHashMap<UUID, PlayerPermissions>>() {
+        Type type = new TypeToken<ConcurrentHashMap<String, PlayerPermissions>>() {
         }.getType();
         PLAYER_PERMISIONS = FileUtil.load(warpDir, "/permissions.json", type, ConcurrentHashMap::new);
     }
 
     public static boolean savePlayerPermissions(ServerWorld world) {
         File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
-        Type type = new TypeToken<ConcurrentHashMap<UUID, PlayerPermissions>>() {
+        Type type = new TypeToken<ConcurrentHashMap<String, PlayerPermissions>>() {
         }.getType();
         return FileUtil.save(warpDir, "/permissions.json", PLAYER_PERMISIONS, type);
     }
@@ -233,7 +232,7 @@ public class DataManager {
     public static PlayerPermissions getPlayerPermission(ServerPlayerEntity playerEntity) {
         String uuid = playerEntity.getUniqueID().toString();
         String name = playerEntity.getDisplayName().getFormattedText();
-        return PLAYER_PERMISIONS.getOrDefault(uuid, new PlayerPermissions(uuid, name, false, false));
+        return PLAYER_PERMISIONS.getOrDefault(uuid, new PlayerPermissions(uuid, name, false, false, false));
     }
 
     public static void syncPermissionsToClient(ServerPlayerEntity playerEntity) {

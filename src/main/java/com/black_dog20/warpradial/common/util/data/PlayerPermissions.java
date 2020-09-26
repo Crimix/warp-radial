@@ -5,12 +5,14 @@ public class PlayerPermissions {
     private String displayName;
     private boolean createServerWarps;
     private boolean deleteServerWarps;
+    private boolean canUseMenu;
 
-    public PlayerPermissions(String uuid, String displayName, boolean createServerWarps, boolean deleteServerWarps) {
+    public PlayerPermissions(String uuid, String displayName, boolean createServerWarps, boolean deleteServerWarps, boolean canUseMenu) {
         this.uuid = uuid;
         this.displayName = displayName;
         this.createServerWarps = createServerWarps;
         this.deleteServerWarps = deleteServerWarps;
+        this.canUseMenu = canUseMenu;
     }
 
     public String getUuid() {
@@ -35,5 +37,13 @@ public class PlayerPermissions {
 
     public void setDeleteServerWarps(boolean deleteServerWarps) {
         this.deleteServerWarps = deleteServerWarps;
+    }
+
+    public boolean canUseMenu() {
+        return canUseMenu;
+    }
+
+    public void setCanUseMenu(boolean canUseMenu) {
+        this.canUseMenu = canUseMenu;
     }
 }

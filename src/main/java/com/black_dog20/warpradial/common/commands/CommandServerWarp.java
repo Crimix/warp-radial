@@ -3,6 +3,7 @@ package com.black_dog20.warpradial.common.commands;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.PermissionHelper;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -34,7 +35,7 @@ public class CommandServerWarp implements ICommand {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("serverwarp")
-                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || canCreateOrDelete(source))
+                .requires(this::requirement)
                 .then(registerSet())
                 .then(registerDel())
         );
@@ -43,14 +44,14 @@ public class CommandServerWarp implements ICommand {
 
     private ArgumentBuilder<CommandSource, ?> registerSet() {
         return Commands.literal("add")
-                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || canCreate(source))
+                .requires(this::requirementSet)
                 .then(Commands.argument("warpName", MessageArgument.message())
                         .executes(this::set));
     }
 
     private ArgumentBuilder<CommandSource, ?> registerDel() {
         return Commands.literal("remove")
-                .requires(source -> source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || canCreate(source))
+                .requires(this::requirementDel)
                 .then(Commands.argument("warpName", MessageArgument.message())
                         .suggests(SUGGESTIONS_PROVIDER)
                         .executes(this::del));
@@ -79,23 +80,15 @@ public class CommandServerWarp implements ICommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private boolean canCreateOrDelete(CommandSource source) {
-        return canCreate(source) || canDelete(source);
+    private boolean requirement(CommandSource source) {
+        return source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreateOrDelete(source);
     }
 
-    private boolean canCreate(CommandSource source) {
-        try {
-            return DataManager.getPlayerPermission(source.asPlayer()).canCreateServerWarps();
-        } catch (CommandSyntaxException e) {
-            return false;
-        }
+    private boolean requirementSet(CommandSource source) {
+        return source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreate(source);
     }
 
-    private boolean canDelete(CommandSource source) {
-        try {
-            return DataManager.getPlayerPermission(source.asPlayer()).canDeleteServerWarps();
-        } catch (CommandSyntaxException e) {
-            return false;
-        }
+    private boolean requirementDel(CommandSource source) {
+        return source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canDelete(source);
     }
 }

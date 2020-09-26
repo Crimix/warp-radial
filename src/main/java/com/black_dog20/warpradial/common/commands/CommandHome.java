@@ -2,6 +2,7 @@ package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.PermissionHelper;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -19,7 +20,7 @@ public class CommandHome implements ICommand {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("home")
-                .requires(source -> source.hasPermissionLevel(0))
+                .requires(source -> source.hasPermissionLevel(0) && PermissionHelper.onlyOpsRuleNotActiveOrCanUse(source))
                 .then(Commands.literal("set")
                         .executes(this::set))
                 .then(Commands.literal("remove")
