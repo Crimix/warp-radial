@@ -1,16 +1,16 @@
 package com.black_dog20.warpradial.common.util;
 
 
+import com.black_dog20.bml.network.messages.PacketPermission;
 import com.black_dog20.bml.utils.file.FileUtil;
 import com.black_dog20.warpradial.common.network.PacketHandler;
-import com.black_dog20.warpradial.common.network.packets.PacketSyncPermissions;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncPlayerWarps;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncServerWarps;
+import com.black_dog20.warpradial.common.util.data.Permission;
 import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -19,9 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 public class DataManager {
 
@@ -106,20 +104,20 @@ public class DataManager {
 
     public static void loadPlayerPermissions(ServerWorld world) {
         File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
-        Type type = new TypeToken<ConcurrentHashMap<UUID, PlayerPermissions>>() {
+        Type type = new TypeToken<ConcurrentHashMap<String, PlayerPermissions>>() {
         }.getType();
         PLAYER_PERMISIONS = FileUtil.load(warpDir, "/permissions.json", type, ConcurrentHashMap::new);
     }
 
     public static boolean savePlayerPermissions(ServerWorld world) {
         File warpDir = FileUtil.getDirRelativeToWorldFolder(world, "/warpradial");
-        Type type = new TypeToken<ConcurrentHashMap<UUID, PlayerPermissions>>() {
+        Type type = new TypeToken<ConcurrentHashMap<String, PlayerPermissions>>() {
         }.getType();
         return FileUtil.save(warpDir, "/permissions.json", PLAYER_PERMISIONS, type);
     }
 
     public static void setHome(ServerPlayerEntity playerEntity, WarpDestination destination) {
-        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+        ServerWorld world = getServerWorld(playerEntity);
         String UUID = playerEntity.getUniqueID().toString();
         HOMES.put(UUID, destination);
         saveHome(world);
@@ -127,14 +125,14 @@ public class DataManager {
     }
 
     public static void deleteHome(ServerPlayerEntity playerEntity) {
-        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+        ServerWorld world = getServerWorld(playerEntity);
         String UUID = playerEntity.getUniqueID().toString();
         HOMES.remove(UUID);
         saveHome(world);
     }
 
     public static void addPlayerWarp(ServerPlayerEntity playerEntity, String name, WarpDestination destination) {
-        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+        ServerWorld world = getServerWorld(playerEntity);
         String UUID = playerEntity.getUniqueID().toString();
 
         ConcurrentHashMap<String, WarpDestination> tempMap = new ConcurrentHashMap<>();
@@ -148,7 +146,7 @@ public class DataManager {
     }
 
     public static void deletePlayerWarp(ServerPlayerEntity playerEntity, String name) {
-        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+        ServerWorld world = getServerWorld(playerEntity);
         String UUID = playerEntity.getUniqueID().toString();
 
         if (PLAYER_WARPS.containsKey(UUID)) {
@@ -161,7 +159,7 @@ public class DataManager {
     }
 
     public static void addServerWarp(ServerPlayerEntity playerEntity, String name, WarpDestination destination) {
-        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+        ServerWorld world = getServerWorld(playerEntity);
 
         SERVER_WARPS.put(name, destination);
         saveServerWarps(world);
@@ -169,7 +167,7 @@ public class DataManager {
     }
 
     public static void deleteServerWarp(ServerPlayerEntity playerEntity, String name) {
-        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+        ServerWorld world = getServerWorld(playerEntity);
 
         SERVER_WARPS.remove(name);
         saveServerWarps(world);
@@ -220,11 +218,23 @@ public class DataManager {
         }
     }
 
-    public static void addPlayerPermission(ServerPlayerEntity playerEntity, Function<PlayerPermissions, PlayerPermissions> function) {
-        ServerWorld world = playerEntity.getServer().getWorld(DimensionType.getById(0));
+    public static void addPlayerPermission(ServerPlayerEntity playerEntity, Permission permission) {
+        ServerWorld world = getServerWorld(playerEntity);
+
         String uuid = playerEntity.getUniqueID().toString();
         PlayerPermissions playerPermissions = getPlayerPermission(playerEntity);
-        playerPermissions = function.apply(playerPermissions);
+        playerPermissions.grant(permission);
+        PLAYER_PERMISIONS.put(uuid, playerPermissions);
+        savePlayerPermissions(world);
+        syncPermissionsToClient(playerEntity);
+    }
+
+    public static void removePlayerPermission(ServerPlayerEntity playerEntity, Permission permission) {
+        ServerWorld world = getServerWorld(playerEntity);
+
+        String uuid = playerEntity.getUniqueID().toString();
+        PlayerPermissions playerPermissions = getPlayerPermission(playerEntity);
+        playerPermissions.rework(permission);
         PLAYER_PERMISIONS.put(uuid, playerPermissions);
         savePlayerPermissions(world);
         syncPermissionsToClient(playerEntity);
@@ -232,13 +242,21 @@ public class DataManager {
 
     public static PlayerPermissions getPlayerPermission(ServerPlayerEntity playerEntity) {
         String uuid = playerEntity.getUniqueID().toString();
-        String name = playerEntity.getDisplayName().getFormattedText();
-        return PLAYER_PERMISIONS.getOrDefault(uuid, new PlayerPermissions(uuid, name, false, false));
+        String name = playerEntity.getName().getString();
+        return PLAYER_PERMISIONS.getOrDefault(uuid, new PlayerPermissions(uuid, name));
+    }
+
+    public static boolean playerHasPermission(ServerPlayerEntity playerEntity, Permission permission) {
+        return getPlayerPermission(playerEntity).hasPermission(permission);
     }
 
     public static void syncPermissionsToClient(ServerPlayerEntity playerEntity) {
         PlayerPermissions playerPermissions = getPlayerPermission(playerEntity);
-        PacketHandler.sendTo(new PacketSyncPermissions(playerPermissions), playerEntity);
+        PacketHandler.sendTo(new PacketPermission<>(PlayerPermissions.class, playerPermissions), playerEntity);
+    }
+
+    private static ServerWorld getServerWorld(ServerPlayerEntity playerEntity) {
+        return playerEntity.getServer().func_241755_D_();
     }
 
 }

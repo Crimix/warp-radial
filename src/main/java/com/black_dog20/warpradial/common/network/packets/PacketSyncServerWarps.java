@@ -1,7 +1,6 @@
 package com.black_dog20.warpradial.common.network.packets;
 
-import com.black_dog20.warpradial.client.ClientDataManager;
-import com.black_dog20.warpradial.client.radial.items.ClientServerDestination;
+import com.black_dog20.warpradial.common.network.Handlers;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
 
 public class PacketSyncServerWarps {
 
-    private static class Triple<A, B, C> {
+    public static class Triple<A, B, C> {
         private final A v1;
         private final B v2;
         private final C v3;
@@ -56,6 +55,10 @@ public class PacketSyncServerWarps {
         this.warps = warps;
     }
 
+    public List<PacketSyncServerWarps.Triple<String, String, Long>> getWarps() {
+        return warps;
+    }
+
     public static void encode(PacketSyncServerWarps msg, PacketBuffer buffer) {
         buffer.writeInt(msg.warps.size());
         for (Triple<String, String, Long> p : msg.warps) {
@@ -76,13 +79,7 @@ public class PacketSyncServerWarps {
 
     public static class Handler {
         public static void handle(PacketSyncServerWarps msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-                ClientDataManager.SERVER_DESTINATION.clear();
-                for (Triple<String, String, Long> p : msg.warps) {
-                    ClientDataManager.SERVER_DESTINATION.add(new ClientServerDestination(p.getFirst(), p.getSecond(), p.getThird()));
-                }
-
-            }));
+            ctx.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Handlers.handle(msg)));
             ctx.get().setPacketHandled(true);
         }
     }

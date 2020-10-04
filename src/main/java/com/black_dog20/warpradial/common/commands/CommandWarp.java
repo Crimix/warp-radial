@@ -2,6 +2,7 @@ package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.PermissionHelper;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -38,7 +39,7 @@ public class CommandWarp implements ICommand {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("warp")
-                .requires(source -> source.hasPermissionLevel(0))
+                .requires(source -> source.hasPermissionLevel(0) && PermissionHelper.onlyOpsRuleNotActiveOrCanUse(source))
                 .then(registerSet())
                 .then(registerDel())
         );
@@ -64,19 +65,19 @@ public class CommandWarp implements ICommand {
 
     public int set(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
-        String warpName = MessageArgument.getMessage(context, "warpName").getFormattedText();
+        String warpName = MessageArgument.getMessage(context, "warpName").getString();
         World world = player.world;
-        WarpDestination destination = new WarpDestination(world.dimension.getType(), player);
+        WarpDestination destination = new WarpDestination(world.func_234923_W_(), player);
         DataManager.addPlayerWarp(player, warpName, destination);
-        context.getSource().sendFeedback(SET_WARP.getComponent(warpName), Config.LOG_WARPS.get());
+        context.getSource().sendFeedback(SET_WARP.get(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
     public int del(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
-        String warpName = MessageArgument.getMessage(context, "warpName").getFormattedText();
+        String warpName = MessageArgument.getMessage(context, "warpName").getString();
         DataManager.deletePlayerWarp(player, warpName);
-        context.getSource().sendFeedback(DEL_WARP.getComponent(warpName), Config.LOG_WARPS.get());
+        context.getSource().sendFeedback(DEL_WARP.get(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 }

@@ -5,12 +5,12 @@ import com.black_dog20.bml.client.radial.items.TextRadialCategory;
 import com.black_dog20.bml.client.radial.items.TextRadialItem;
 import com.black_dog20.bml.client.screen.ConfirmInputScreen;
 import com.black_dog20.warpradial.client.ClientDataManager;
-import com.black_dog20.warpradial.common.util.TranslationHelper;
-import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
+import com.black_dog20.warpradial.common.util.data.Permission;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import static com.black_dog20.warpradial.common.util.TranslationHelper.Translati
 public class ServerWarpsRadialCategory extends TextRadialCategory {
 
     public ServerWarpsRadialCategory() {
-        super(TranslationHelper.translate(SERVER_WARPS));
+        super(SERVER_WARPS.get());
     }
 
     @Override
@@ -40,24 +40,22 @@ public class ServerWarpsRadialCategory extends TextRadialCategory {
     }
 
     @Override
-    public List<String> getTooltips() {
-        List<String> tooltips = new ArrayList<String>();
-        tooltips.add(TranslationHelper.translateToString(SERVER_WARPS_TOOLTIP));
+    public List<ITextComponent> getTooltips() {
+        List<ITextComponent> tooltips = new ArrayList<>();
+        tooltips.add(SERVER_WARPS_TOOLTIP.get());
         tooltips.addAll(super.getTooltips());
         return tooltips;
     }
 
     @Override
     public List<IRadialItem> getContextItems() {
-        boolean canCreate = ClientDataManager.PLAYER_PERMISSION
-                .map(PlayerPermissions::canCreateServerWarps)
-                .orElse(false);
-        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP || canCreate))
+        if (!ClientDataManager.getPermissionOrIsOpOrSinglePlayer(Permission.CAN_CREATE_SERVER_WARPS))
             return Collections.emptyList();
-        IRadialItem add = new TextRadialItem(TranslationHelper.translate(ADD_SERVER_WARP_TOOLTIP)) {
+
+        IRadialItem add = new TextRadialItem(ADD_SERVER_WARP_TOOLTIP.get()) {
             @Override
             public void click() {
-                ConfirmInputScreen screen = new ConfirmInputScreen(this::onConfirmClick, TranslationHelper.translate(ADD_SERVER_WARP_TOOLTIP, TextFormatting.BOLD), TranslationHelper.translate(ADD_MESSAGE));
+                ConfirmInputScreen screen = new ConfirmInputScreen(this::onConfirmClick, ADD_SERVER_WARP_TOOLTIP.get(TextFormatting.BOLD), ADD_MESSAGE.get());
                 Minecraft.getInstance().displayGuiScreen(screen);
                 screen.setButtonDelay(20);
             }

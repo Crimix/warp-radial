@@ -7,12 +7,14 @@ import com.black_dog20.warpradial.client.ClientDataManager;
 import com.black_dog20.warpradial.common.network.PacketHandler;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportServerWarp;
 import com.black_dog20.warpradial.common.util.TranslationHelper;
-import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
+import com.black_dog20.warpradial.common.util.data.Permission;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -35,10 +37,10 @@ public class ClientServerDestination extends TextRadialItem {
     }
 
     @Override
-    public List<String> getTooltips() {
-        List<String> tooltips = new ArrayList<String>();
-        String dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
-        tooltips.add(TranslationHelper.translateToString(DIMENSION_TOOLTOP, dimension));
+    public List<ITextComponent> getTooltips() {
+        List<ITextComponent> tooltips = new ArrayList<>();
+        TextComponent dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
+        tooltips.add(DIMENSION_TOOLTOP.get(dimension));
         tooltips.addAll(super.getTooltips());
         return tooltips;
     }
@@ -50,11 +52,9 @@ public class ClientServerDestination extends TextRadialItem {
 
     @Override
     public List<IRadialItem> getContextItems() {
-        boolean canDelete = ClientDataManager.PLAYER_PERMISSION
-                .map(PlayerPermissions::canDeleteServerWarps)
-                .orElse(false);
-        if (!(Minecraft.getInstance().isSingleplayer() || ClientDataManager.IS_OP || canDelete))
+        if (!ClientDataManager.getPermissionOrIsOpOrSinglePlayer(Permission.CAN_DELETE_SERVER_WARPS))
             return Collections.emptyList();
+
         IRadialItem remove = new TextRadialItem(TranslationHelper.translate(REMOVE_SERVER_WARP_TOOLTIP)) {
             @Override
             public void click() {

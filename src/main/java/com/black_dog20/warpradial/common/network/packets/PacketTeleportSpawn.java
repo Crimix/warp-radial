@@ -6,6 +6,7 @@ import com.black_dog20.warpradial.common.util.TeleportationHelper;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Util;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -34,14 +35,17 @@ public class PacketTeleportSpawn {
                 if (!Config.WARP_TO_SPAWN_ALLOWED.get())
                     return;
 
+                if (!TeleportationHelper.checkPermission(player))
+                    return;
+
                 if (!TeleportationHelper.canTeleport(player, Cooldown.SPAWN))
                     return;
 
                 if (TeleportationUtil.teleportPlayerToSpawn(player)) {
                     TeleportationHelper.handleCooldown(player, Cooldown.SPAWN);
-                    player.sendMessage(TELPORTED_TO_SPAWN.getComponent());
+                    player.sendMessage(TELPORTED_TO_SPAWN.get(), Util.DUMMY_UUID);
                 } else {
-                    player.sendMessage(COULD_NOT_TELEPORT.getComponent());
+                    player.sendMessage(COULD_NOT_TELEPORT.get(), Util.DUMMY_UUID);
                 }
             });
             ctx.get().setPacketHandled(true);

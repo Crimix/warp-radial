@@ -39,10 +39,14 @@ public class TranslationHelper extends TranslationUtil {
         TELPORTED_TO_WARP("msg.teleport_warp"),
         NO_WARP("msg.teleport_no_warp"),
         COULD_NOT_TELEPORT("msg.teleport_failed"),
+        COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION("msg.teleport_failed_permission"),
         PERMISSIONS_CAN_CREATE_ADDED("msg.can_create_server_warps_added"),
         PERMISSIONS_CAN_CREATE_REMOVED("msg.can_create_server_warps_removed"),
         PERMISSIONS_CAN_DELETE_ADDED("msg.can_delete_server_warps_added"),
         PERMISSIONS_CAN_DELETE_REMOVED("msg.can_delete_server_warps_removed"),
+        PERMISSIONS_CAN_USE_ADDED("msg.can_use_added"),
+        PERMISSIONS_CAN_USE_REMOVED("msg.can_use_removed"),
+        DENIED_MENU_USE("msg.can_not_use"),
         ;
 
         Translations(String modId, String key) {

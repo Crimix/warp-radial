@@ -5,11 +5,11 @@ import com.black_dog20.bml.client.radial.items.TextRadialCategory;
 import com.black_dog20.bml.client.radial.items.TextRadialItem;
 import com.black_dog20.bml.client.screen.ConfirmInputScreen;
 import com.black_dog20.warpradial.client.ClientDataManager;
-import com.black_dog20.warpradial.common.util.TranslationHelper;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import static com.black_dog20.warpradial.common.util.TranslationHelper.Translati
 public class PlayerWarpsRadialCategory extends TextRadialCategory {
 
     public PlayerWarpsRadialCategory() {
-        super(TranslationHelper.translate(PLAYER_WARPS));
+        super(PLAYER_WARPS.get());
     }
 
     @Override
@@ -38,19 +38,19 @@ public class PlayerWarpsRadialCategory extends TextRadialCategory {
     }
 
     @Override
-    public List<String> getTooltips() {
-        List<String> tooltips = new ArrayList<String>();
-        tooltips.add(TranslationHelper.translateToString(PLAYER_WARPS_TOOLTIP));
+    public List<ITextComponent> getTooltips() {
+        List<ITextComponent> tooltips = new ArrayList<>();
+        tooltips.add(PLAYER_WARPS_TOOLTIP.get());
         tooltips.addAll(super.getTooltips());
         return tooltips;
     }
 
     @Override
     public List<IRadialItem> getContextItems() {
-        IRadialItem add = new TextRadialItem(TranslationHelper.translate(ADD_PLAYER_WARP_TOOLTIP)) {
+        IRadialItem add = new TextRadialItem(ADD_PLAYER_WARP_TOOLTIP.get()) {
             @Override
             public void click() {
-                ConfirmInputScreen screen = new ConfirmInputScreen(this::onConfirmClick, TranslationHelper.translate(ADD_PLAYER_WARP_TOOLTIP, TextFormatting.BOLD), TranslationHelper.translate(ADD_MESSAGE));
+                ConfirmInputScreen screen = new ConfirmInputScreen(this::onConfirmClick, ADD_PLAYER_WARP_TOOLTIP.get(TextFormatting.BOLD), ADD_MESSAGE.get());
                 Minecraft.getInstance().displayGuiScreen(screen);
                 screen.setButtonDelay(20);
             }

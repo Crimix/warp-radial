@@ -8,6 +8,7 @@ import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Util;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.Optional;
@@ -41,6 +42,9 @@ public class PacketTeleportServerWarp {
                 if (!Config.SERVER_WARPS_ALLOWED.get())
                     return;
 
+                if (!TeleportationHelper.checkPermission(player))
+                    return;
+
                 if (!TeleportationHelper.canTeleport(player, Cooldown.SERVER))
                     return;
 
@@ -49,12 +53,12 @@ public class PacketTeleportServerWarp {
                 if (warp.isPresent()) {
                     if (TeleportationUtil.teleportPlayerToDestination(player, warp.get())) {
                         TeleportationHelper.handleCooldown(player, Cooldown.SERVER);
-                        player.sendMessage(TELPORTED_TO_WARP.getComponent(msg.warpName));
+                        player.sendMessage(TELPORTED_TO_WARP.get(msg.warpName), Util.DUMMY_UUID);
                     } else {
-                        player.sendMessage(COULD_NOT_TELEPORT.getComponent());
+                        player.sendMessage(COULD_NOT_TELEPORT.get(), Util.DUMMY_UUID);
                     }
                 } else {
-                    player.sendMessage(NO_WARP.getComponent());
+                    player.sendMessage(NO_WARP.get(), Util.DUMMY_UUID);
                 }
             });
             ctx.get().setPacketHandled(true);

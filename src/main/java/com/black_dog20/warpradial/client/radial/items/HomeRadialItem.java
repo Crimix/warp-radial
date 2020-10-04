@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -28,19 +29,19 @@ public class HomeRadialItem extends TextRadialItem {
     }
 
     @Override
-    public List<String> getTooltips() {
-        List<String> tooltips = new ArrayList<String>();
-        tooltips.add(TranslationHelper.translateToString(HOME_TOOLTIP));
+    public List<ITextComponent> getTooltips() {
+        List<ITextComponent> tooltips = new ArrayList<>();
+        tooltips.add(HOME_TOOLTIP.get());
         tooltips.addAll(super.getTooltips());
         return tooltips;
     }
 
     @Override
     public List<IRadialItem> getContextItems() {
-        IRadialItem set = new TextRadialItem(TranslationHelper.translate(SET_HOME_TOOLTIP)) {
+        IRadialItem set = new TextRadialItem(SET_HOME_TOOLTIP.get()) {
             @Override
             public void click() {
-                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, TranslationHelper.translate(SET_HOME_TOOLTIP, TextFormatting.BOLD), TranslationHelper.translate(SET_HOME_MESSAGE));
+                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, SET_HOME_TOOLTIP.get(TextFormatting.BOLD), SET_HOME_MESSAGE.get());
                 Minecraft.getInstance().displayGuiScreen(screen);
                 screen.setButtonDelay(20);
             }
@@ -53,10 +54,10 @@ public class HomeRadialItem extends TextRadialItem {
             }
         };
 
-        IRadialItem remove = new TextRadialItem(TranslationHelper.translate(REMOVE_HOME_TOOLTIP)) {
+        IRadialItem remove = new TextRadialItem(REMOVE_HOME_TOOLTIP.get()) {
             @Override
             public void click() {
-                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, TranslationHelper.translate(REMOVE_HOME_TOOLTIP, TextFormatting.BOLD), TranslationHelper.translate(REMOVE_MESSAGE, TranslationHelper.translateToString(HOME)));
+                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, REMOVE_HOME_TOOLTIP.get(TextFormatting.BOLD), REMOVE_MESSAGE.get(TranslationHelper.translateToString(HOME)));
                 Minecraft.getInstance().displayGuiScreen(screen);
                 screen.setButtonDelay(20);
             }

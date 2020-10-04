@@ -57,6 +57,9 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
+            // Disable mixin refmaps
+            property 'mixin.env.disableRefMap', 'true'
+
             mods {
                 warpradial {
                     source sourceSets.main
@@ -72,6 +75,9 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+            // Disable mixin refmaps
+            property 'mixin.env.disableRefMap', 'true'
 
             mods {
                 warpradial {
@@ -143,8 +149,8 @@ dependencies {
 		version: "${project.mc_version}-${project.forge_version}"
 	])
 	
-	compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+	//compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 	compileOnly fg.deobf("com.black_dog20.bml:BML:${mc_version}-${bml_version}")
     runtimeOnly fg.deobf("com.black_dog20.bml:BML:${mc_version}-${bml_version}")
 
@@ -170,7 +176,7 @@ curseforge {
     project {
         id = '375446'
         changelogType = 'markdown'
-        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/master/CHANGELOG.md)'
+        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.16/CHANGELOG.md)'
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 8'

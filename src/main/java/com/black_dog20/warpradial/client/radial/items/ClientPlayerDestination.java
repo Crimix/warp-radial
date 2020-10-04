@@ -5,12 +5,13 @@ import com.black_dog20.bml.client.radial.items.TextRadialItem;
 import com.black_dog20.bml.utils.dimension.DimensionUtil;
 import com.black_dog20.warpradial.common.network.PacketHandler;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportPlayerWarp;
-import com.black_dog20.warpradial.common.util.TranslationHelper;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -32,10 +33,10 @@ public class ClientPlayerDestination extends TextRadialItem {
     }
 
     @Override
-    public List<String> getTooltips() {
-        List<String> tooltips = new ArrayList<String>();
-        String dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
-        tooltips.add(TranslationHelper.translateToString(DIMENSION_TOOLTOP, dimension));
+    public List<ITextComponent> getTooltips() {
+        List<ITextComponent> tooltips = new ArrayList<>();
+        TextComponent dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
+        tooltips.add(DIMENSION_TOOLTOP.get(dimension));
         tooltips.addAll(super.getTooltips());
         return tooltips;
     }
@@ -47,10 +48,10 @@ public class ClientPlayerDestination extends TextRadialItem {
 
     @Override
     public List<IRadialItem> getContextItems() {
-        IRadialItem remove = new TextRadialItem(TranslationHelper.translate(REMOVE_PLAYER_WARP_TOOLTIP)) {
+        IRadialItem remove = new TextRadialItem(REMOVE_PLAYER_WARP_TOOLTIP.get()) {
             @Override
             public void click() {
-                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, TranslationHelper.translate(REMOVE_PLAYER_WARP_TOOLTIP, TextFormatting.BOLD), TranslationHelper.translate(REMOVE_MESSAGE, name));
+                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, REMOVE_PLAYER_WARP_TOOLTIP.get(TextFormatting.BOLD), REMOVE_MESSAGE.get(name));
                 Minecraft.getInstance().displayGuiScreen(screen);
                 screen.setButtonDelay(20);
             }

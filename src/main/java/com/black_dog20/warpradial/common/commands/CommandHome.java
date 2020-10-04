@@ -2,6 +2,7 @@ package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.PermissionHelper;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -19,7 +20,7 @@ public class CommandHome implements ICommand {
     @Override
     public void register(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(Commands.literal("home")
-                .requires(source -> source.hasPermissionLevel(0))
+                .requires(source -> source.hasPermissionLevel(0) && PermissionHelper.onlyOpsRuleNotActiveOrCanUse(source))
                 .then(Commands.literal("set")
                         .executes(this::set))
                 .then(Commands.literal("remove")
@@ -34,16 +35,16 @@ public class CommandHome implements ICommand {
     public int set(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
         World world = player.world;
-        WarpDestination destination = new WarpDestination(world.dimension.getType(), player.getPosition(), player.rotationYaw, player.rotationPitch);
+        WarpDestination destination = new WarpDestination(world.func_234923_W_(), player.getPosition(), player.rotationYaw, player.rotationPitch);
         DataManager.setHome(player, destination);
-        context.getSource().sendFeedback(SET_HOME.getComponent(), Config.LOG_WARPS.get());
+        context.getSource().sendFeedback(SET_HOME.get(), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
     public int del(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
         DataManager.deleteHome(player);
-        context.getSource().sendFeedback(DEL_HOME.getComponent(), Config.LOG_WARPS.get());
+        context.getSource().sendFeedback(DEL_HOME.get(), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 }

@@ -6,9 +6,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ public class ModCommands {
     private static List<ICommand> COMMANDS = ImmutableList.of(new CommandHome(), new CommandWarp(), new CommandServerWarp(), new CommandPermission());
 
     @SubscribeEvent
-    public static void onServerStarting(FMLServerStartingEvent event) {
+    public static void onCommandRegister(RegisterCommandsEvent event) {
 
-        CommandDispatcher<CommandSource> dispatcher = event.getCommandDispatcher();
+        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
 
         LiteralArgumentBuilder<CommandSource> builder = Commands.literal("wr");
         for (ICommand command : COMMANDS) {
