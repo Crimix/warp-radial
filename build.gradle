@@ -151,8 +151,8 @@ dependencies {
 	
 	//compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-	compileOnly fg.deobf("com.black_dog20.bml:BML:${mc_version}-${bml_version}")
-    runtimeOnly fg.deobf("com.black_dog20.bml:BML:${mc_version}-${bml_version}")
+	compileOnly fg.deobf("com.black_dog20.bml:bml:${mc_version}-${bml_version}")
+    runtimeOnly fg.deobf("com.black_dog20.bml:bml:${mc_version}-${bml_version}")
 
 }
 
@@ -180,7 +180,8 @@ curseforge {
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 8'
-        addGameVersion '1.15.2'
+        addGameVersion '1.16.3'
+        addGameVersion '1.16.4'
         relations {
             requiredDependency 'bml'
         }
