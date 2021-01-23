@@ -166,3 +166,4 @@ gradle-app.setting
 src/generated/resources/.cache/cache
 /.vscode/
 /private.properties
+/logs
