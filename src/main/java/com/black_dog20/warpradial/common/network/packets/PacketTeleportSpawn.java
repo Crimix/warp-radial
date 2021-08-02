@@ -4,31 +4,32 @@ import com.black_dog20.bml.utils.player.TeleportationUtil;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.TeleportationHelper;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Util;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.Util;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.*;
+import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.COULD_NOT_TELEPORT;
+import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.TELPORTED_TO_SPAWN;
 
 public class PacketTeleportSpawn {
 
     public PacketTeleportSpawn() {
     }
 
-    public static void encode(PacketTeleportSpawn msg, PacketBuffer buffer) {
+    public static void encode(PacketTeleportSpawn msg, FriendlyByteBuf buffer) {
     }
 
-    public static PacketTeleportSpawn decode(PacketBuffer buffer) {
+    public static PacketTeleportSpawn decode(FriendlyByteBuf buffer) {
         return new PacketTeleportSpawn();
     }
 
     public static class Handler {
         public static void handle(PacketTeleportSpawn msg, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
-                ServerPlayerEntity player = ctx.get().getSender();
+                ServerPlayer player = ctx.get().getSender();
                 if (player == null)
                     return;
 
@@ -43,9 +44,9 @@ public class PacketTeleportSpawn {
 
                 if (TeleportationUtil.teleportPlayerToSpawn(player)) {
                     TeleportationHelper.handleCooldown(player, Cooldown.SPAWN);
-                    player.sendMessage(TELPORTED_TO_SPAWN.get(), Util.DUMMY_UUID);
+                    player.sendMessage(TELPORTED_TO_SPAWN.get(), Util.NIL_UUID);
                 } else {
-                    player.sendMessage(COULD_NOT_TELEPORT.get(), Util.DUMMY_UUID);
+                    player.sendMessage(COULD_NOT_TELEPORT.get(), Util.NIL_UUID);
                 }
             });
             ctx.get().setPacketHandled(true);

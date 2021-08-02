@@ -6,10 +6,10 @@ import com.black_dog20.warpradial.common.util.DataManager;
 import com.black_dog20.warpradial.common.util.TeleportationHelper;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Util;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.Util;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -21,17 +21,17 @@ public class PacketTeleportHome {
     public PacketTeleportHome() {
     }
 
-    public static void encode(PacketTeleportHome msg, PacketBuffer buffer) {
+    public static void encode(PacketTeleportHome msg, FriendlyByteBuf buffer) {
     }
 
-    public static PacketTeleportHome decode(PacketBuffer buffer) {
+    public static PacketTeleportHome decode(FriendlyByteBuf buffer) {
         return new PacketTeleportHome();
     }
 
     public static class Handler {
         public static void handle(PacketTeleportHome msg, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
-                ServerPlayerEntity player = ctx.get().getSender();
+                ServerPlayer player = ctx.get().getSender();
                 if (player == null)
                     return;
 
@@ -49,12 +49,12 @@ public class PacketTeleportHome {
                 if (home.isPresent()) {
                     if (TeleportationUtil.teleportPlayerToDestination(player, home.get())) {
                         TeleportationHelper.handleCooldown(player, Cooldown.HOME);
-                        player.sendMessage(TELPORTED_TO_HOME.get(), Util.DUMMY_UUID);
+                        player.sendMessage(TELPORTED_TO_HOME.get(), Util.NIL_UUID);
                     } else {
-                        player.sendMessage(COULD_NOT_TELEPORT.get(), Util.DUMMY_UUID);
+                        player.sendMessage(COULD_NOT_TELEPORT.get(), Util.NIL_UUID);
                     }
                 } else {
-                    player.sendMessage(NO_HOME.get(), Util.DUMMY_UUID);
+                    player.sendMessage(NO_HOME.get(), Util.NIL_UUID);
                 }
             });
             ctx.get().setPacketHandled(true);

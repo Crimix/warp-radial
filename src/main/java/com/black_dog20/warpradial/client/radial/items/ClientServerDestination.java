@@ -9,13 +9,13 @@ import com.black_dog20.warpradial.common.network.packets.PacketTeleportServerWar
 import com.black_dog20.warpradial.common.util.TranslationHelper;
 import com.black_dog20.warpradial.common.util.data.Permission;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,16 +30,16 @@ public class ClientServerDestination extends TextRadialItem {
     private final long created;
 
     public ClientServerDestination(String name, String dimensionName, long created) {
-        super(new StringTextComponent(name));
+        super(new TextComponent(name));
         this.name = name;
         this.dimensionName = dimensionName;
         this.created = created;
     }
 
     @Override
-    public List<ITextComponent> getTooltips() {
-        List<ITextComponent> tooltips = new ArrayList<>();
-        TextComponent dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
+    public List<Component> getTooltips() {
+        List<Component> tooltips = new ArrayList<>();
+        BaseComponent dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
         tooltips.add(DIMENSION_TOOLTOP.get(dimension));
         tooltips.addAll(super.getTooltips());
         return tooltips;
@@ -58,16 +58,16 @@ public class ClientServerDestination extends TextRadialItem {
         IRadialItem remove = new TextRadialItem(TranslationHelper.translate(REMOVE_SERVER_WARP_TOOLTIP)) {
             @Override
             public void click() {
-                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, TranslationHelper.translate(REMOVE_SERVER_WARP_TOOLTIP, TextFormatting.BOLD), TranslationHelper.translate(REMOVE_MESSAGE, name));
-                Minecraft.getInstance().displayGuiScreen(screen);
-                screen.setButtonDelay(20);
+                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, TranslationHelper.translate(REMOVE_SERVER_WARP_TOOLTIP, ChatFormatting.BOLD), TranslationHelper.translate(REMOVE_MESSAGE, name));
+                Minecraft.getInstance().setScreen(screen);
+                screen.setDelay(20);
             }
 
             private void onConfirmClick(boolean value) {
                 if (value) {
-                    Minecraft.getInstance().player.sendChatMessage("/warpradial serverwarp remove " + name);
+                    Minecraft.getInstance().player.chat("/warpradial serverwarp remove " + name);
                 }
-                Minecraft.getInstance().displayGuiScreen((Screen) null);
+                Minecraft.getInstance().setScreen((Screen) null);
             }
         };
         return ImmutableList.of(remove);

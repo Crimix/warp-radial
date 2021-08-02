@@ -9,7 +9,7 @@ import com.black_dog20.warpradial.client.radial.WarpRadialMenu;
 import com.black_dog20.warpradial.common.util.TranslationHelper;
 import com.black_dog20.warpradial.common.util.data.Permission;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,18 +26,18 @@ public class ClientKeyEvents {
     public static void handleKeys(TickEvent.ClientTickEvent event) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.currentScreen == null) {
+        if (mc.screen == null) {
             boolean keyIsDown = KeybindsUtil.isKeyDown(Keybinds.openWarpMenu);
             if (keyIsDown && !keyWasDown) {
                 boolean allowed = isAllowed();
                 if (!allowed && Config.INFORM_USER_OF_MISSING_PERMISSION.get()) {
                     Optional.ofNullable(Minecraft.getInstance().player)
-                            .ifPresent(player -> player.sendStatusMessage(TranslationHelper.Translations.DENIED_MENU_USE.get(), true));
+                            .ifPresent(player -> player.displayClientMessage(TranslationHelper.Translations.DENIED_MENU_USE.get(), true));
                 }
 
-                while (Keybinds.openWarpMenu.isPressed()) {
+                while (Keybinds.openWarpMenu.consumeClick()) {
                     if (allowed) {
-                        mc.displayGuiScreen(new WarpRadialMenu(new StringTextComponent("Wrap menu")));
+                        mc.setScreen(new WarpRadialMenu(new TextComponent("Wrap menu")));
                     }
                 }
             }
