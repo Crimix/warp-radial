@@ -11,29 +11,30 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.command.arguments.MessageArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.MessageArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.*;
+import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.DEL_WARP;
+import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.SET_WARP;
 
 public class CommandServerWarp implements ICommand {
 
-    public static final SuggestionProvider<CommandSource> SUGGESTIONS_PROVIDER = (context, suggestionsBuilder) -> {
+    public static final SuggestionProvider<CommandSourceStack> SUGGESTIONS_PROVIDER = (context, suggestionsBuilder) -> {
         List<String> strings = DataManager.getServerWarps().entrySet().stream()
                 .map(k -> k.getKey())
                 .collect(Collectors.toList());
-        return ISuggestionProvider.suggest(strings, suggestionsBuilder);
+        return SharedSuggestionProvider.suggest(strings, suggestionsBuilder);
     };
 
     @Override
-    public void register(LiteralArgumentBuilder<CommandSource> builder) {
+    public void register(LiteralArgumentBuilder<CommandSourceStack> builder) {
         builder.then(Commands.literal("serverwarp")
                 .requires(this::requirement)
                 .then(registerSet())
@@ -42,14 +43,14 @@ public class CommandServerWarp implements ICommand {
     }
 
 
-    private ArgumentBuilder<CommandSource, ?> registerSet() {
+    private ArgumentBuilder<CommandSourceStack, ?> registerSet() {
         return Commands.literal("add")
                 .requires(this::requirementSet)
                 .then(Commands.argument("warpName", MessageArgument.message())
                         .executes(this::set));
     }
 
-    private ArgumentBuilder<CommandSource, ?> registerDel() {
+    private ArgumentBuilder<CommandSourceStack, ?> registerDel() {
         return Commands.literal("remove")
                 .requires(this::requirementDel)
                 .then(Commands.argument("warpName", MessageArgument.message())
@@ -62,33 +63,33 @@ public class CommandServerWarp implements ICommand {
         return Config.SERVER_WARPS_ALLOWED.get();
     }
 
-    public int set(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().asPlayer();
+    public int set(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
         String warpName = MessageArgument.getMessage(context, "warpName").getString();
-        World world = player.world;
-        WarpDestination destination = new WarpDestination(world.func_234923_W_(), player);
+        Level world = player.level;
+        WarpDestination destination = new WarpDestination(world.dimension(), player);
         DataManager.addServerWarp(player, warpName, destination);
-        context.getSource().sendFeedback(SET_WARP.get(warpName), Config.LOG_WARPS.get());
+        context.getSource().sendSuccess(SET_WARP.get(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
-    public int del(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().asPlayer();
+    public int del(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
         String warpName = MessageArgument.getMessage(context, "warpName").getString();
         DataManager.deleteServerWarp(player, warpName);
-        context.getSource().sendFeedback(DEL_WARP.get(warpName), Config.LOG_WARPS.get());
+        context.getSource().sendSuccess(DEL_WARP.get(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
-    private boolean requirement(CommandSource source) {
-        return source.hasPermissionLevel(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || source.hasPermissionLevel(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreateOrDelete(source);
+    private boolean requirement(CommandSourceStack source) {
+        return source.hasPermission(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || source.hasPermission(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreateOrDelete(source);
     }
 
-    private boolean requirementSet(CommandSource source) {
-        return source.hasPermissionLevel(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreate(source);
+    private boolean requirementSet(CommandSourceStack source) {
+        return source.hasPermission(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreate(source);
     }
 
-    private boolean requirementDel(CommandSource source) {
-        return source.hasPermissionLevel(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canDelete(source);
+    private boolean requirementDel(CommandSourceStack source) {
+        return source.hasPermission(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canDelete(source);
     }
 }

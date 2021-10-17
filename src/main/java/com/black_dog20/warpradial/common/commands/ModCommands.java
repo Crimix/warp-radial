@@ -4,8 +4,8 @@ import com.black_dog20.warpradial.WarpRadial;
 import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,9 +20,9 @@ public class ModCommands {
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
 
-        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 
-        LiteralArgumentBuilder<CommandSource> builder = Commands.literal("wr");
+        LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("wr");
         for (ICommand command : COMMANDS) {
             if (command.shouldBeRegistered()) {
                 command.register(builder);
@@ -30,7 +30,7 @@ public class ModCommands {
         }
         dispatcher.register(builder);
 
-        LiteralArgumentBuilder<CommandSource> builder2 = Commands.literal("warpradial");
+        LiteralArgumentBuilder<CommandSourceStack> builder2 = Commands.literal("warpradial");
         for (ICommand command : COMMANDS) {
             if (command.shouldBeRegistered()) {
                 command.register(builder2);

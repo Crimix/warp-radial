@@ -165,5 +165,5 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/gradle,eclipse,intellij,forgegradle
 src/generated/resources/.cache/cache
 /.vscode/
-/private.properties
+/gradle-local.properties
 /logs

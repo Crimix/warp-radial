@@ -1,49 +1,46 @@
 buildscript {
     repositories {
-        jcenter()
-        maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
-		}
-		maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-      		url "https://plugins.gradle.org/m2/"
-    	}
+        mavenCentral()
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://maven.parchmentmc.org' }
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
-        classpath "com.wynprice.cursemaven:CurseMaven:2.1.1"
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.parchmentmc:librarian:1.+'
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'com.matthewprenger.cursegradle'
-apply plugin: "com.wynprice.cursemaven"
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
 
-ext.priv = parseConfig(file('private.properties'))
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply from: 'https://raw.githubusercontent.com/Crimix/bml/1.17/common.gradle'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 version = version_major + '.' + version_minor + '.' + version_patch
 group = "${mod_group}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_archivesBaseName + "-" + mc_version
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+// Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
-sourceSets {
-    main.resources.srcDirs += 'src/main/generated_resources'
-}
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-	mappings channel: 'snapshot', version: "${mcp_mappings}"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
-     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    // The mappings can be changed at any time, and must be in the following format.
+    // Channel:   Version:
+    // snapshot   YYYYMMDD   Snapshot are built nightly.
+    // stable     #          Stables are built at the discretion of the MCP team.
+    // official   MCVersion  Official field/method names from Mojang mapping files
+    //
+    // You must be aware of the Mojang license when using the 'official' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Use non-default mappings at your own risk. they may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: mappings_channel, version: mappings_version
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -52,7 +49,11 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // The markers can be changed as needed.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -71,7 +72,11 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // The markers can be changed as needed.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -90,7 +95,11 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // The markers can be changed as needed.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -107,8 +116,6 @@ minecraft {
 }
 
 repositories {
-    jcenter()
-    mavenCentral()
     maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
@@ -117,43 +124,33 @@ repositories {
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
-        url = "https://modmaven.k-4u.nl/"
-    }
-    maven {
-        name = "forge"
-        url = "https://files.minecraftforge.net/maven/"
+        url = "https://modmaven.k-4u.nl"
     }
     maven {
         name = "theillusivec4"
         url = "https://maven.theillusivec4.top/"
     }
     maven {
-        name = "Curse"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
-    maven {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/crimix/bml")
         credentials {
-            username = priv.githubUser
-            password = priv.githubToken
+            username = github_user
+            password = github_token
+        }
+        content {
+            includeGroup "com.black_dog20.bml"
         }
     }
     mavenLocal()
 }
 
 dependencies {
-	minecraft([
-		group  : "${project.forge_group}",
-		name   : "forge",
-		version: "${project.mc_version}-${project.forge_version}"
-	])
+    minecraft "net.minecraftforge:forge:${project.mc_version}-${project.forge_version}"
 	
 	//compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-	compileOnly fg.deobf("com.black_dog20.bml:bml:${mc_version}-${bml_version}")
-    runtimeOnly fg.deobf("com.black_dog20.bml:bml:${mc_version}-${bml_version}")
-
+    compileOnly fg.deobf("com.black_dog20.bml:bml:${bml_version}")
+    runtimeOnly fg.deobf("com.black_dog20.bml:bml:${bml_version}")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -164,34 +161,27 @@ jar {
             "Specification-Vendor": "black_dog20",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": "warpradial",
-            "Implementation-Version": "${version}",
+            "Implementation-Version": archiveVersion.get(),
             "Implementation-Vendor" :"black_dog20",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
 
+jar.finalizedBy('reobfJar')
+
 curseforge {
-    apiKey = priv.apiKey
+    apiKey = curse_apiKey
     project {
         id = '375446'
         changelogType = 'markdown'
-        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.16/CHANGELOG.md)'
-        releaseType = 'release'
+        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.17/CHANGELOG.md)'
+        releaseType = 'beta'
         addGameVersion 'Forge'
-        addGameVersion 'Java 8'
-        addGameVersion '1.16.3'
-        addGameVersion '1.16.4'
+        addGameVersion 'Java 16'
+        addGameVersion '1.17.1'
         relations {
             requiredDependency 'bml'
         }
-    }
-}
-
-def parseConfig(File config) {
-    config.withReader {
-        def prop = new Properties()
-        prop.load(it)
-        return (new ConfigSlurper().parse(prop))
     }
 }

@@ -2,10 +2,10 @@ package com.black_dog20.warpradial.common.network.packets;
 
 import com.black_dog20.warpradial.common.network.Handlers;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,20 +59,20 @@ public class PacketSyncServerWarps {
         return warps;
     }
 
-    public static void encode(PacketSyncServerWarps msg, PacketBuffer buffer) {
+    public static void encode(PacketSyncServerWarps msg, FriendlyByteBuf buffer) {
         buffer.writeInt(msg.warps.size());
         for (Triple<String, String, Long> p : msg.warps) {
-            buffer.writeString(p.getFirst());
-            buffer.writeString(p.getSecond());
+            buffer.writeUtf(p.getFirst());
+            buffer.writeUtf(p.getSecond());
             buffer.writeLong(p.getThird());
         }
     }
 
-    public static PacketSyncServerWarps decode(PacketBuffer buffer) {
+    public static PacketSyncServerWarps decode(FriendlyByteBuf buffer) {
         List<Triple<String, String, Long>> warps = new ArrayList<>();
         int size = buffer.readInt();
         for (int i = 0; i < size; i++) {
-            warps.add(new Triple<>(buffer.readString(32767), buffer.readString(32767), buffer.readLong()));
+            warps.add(new Triple<>(buffer.readUtf(32767), buffer.readUtf(32767), buffer.readLong()));
         }
         return new PacketSyncServerWarps(warps);
     }

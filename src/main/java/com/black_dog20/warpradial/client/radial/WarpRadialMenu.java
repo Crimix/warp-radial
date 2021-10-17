@@ -9,14 +9,14 @@ import com.black_dog20.warpradial.client.radial.items.HomeRadialItem;
 import com.black_dog20.warpradial.client.radial.items.PlayerWarpsRadialCategory;
 import com.black_dog20.warpradial.client.radial.items.ServerWarpsRadialCategory;
 import com.black_dog20.warpradial.client.radial.items.SpawnRadialItem;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WarpRadialMenu extends AbstractRadialMenu {
 
-    public WarpRadialMenu(ITextComponent title) {
+    public WarpRadialMenu(Component title) {
         super(title, getItems());
     }
 

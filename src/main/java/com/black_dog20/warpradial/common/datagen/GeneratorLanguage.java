@@ -2,8 +2,8 @@ package com.black_dog20.warpradial.common.datagen;
 
 import com.black_dog20.bml.datagen.BaseLanguageProvider;
 import com.black_dog20.warpradial.WarpRadial;
+import net.minecraft.ChatFormatting;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.util.text.TextFormatting;
 
 import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.*;
 
@@ -21,13 +21,13 @@ public class GeneratorLanguage extends BaseLanguageProvider {
         addPrefixed(KEY_CATEGORY, "Warp Radial");
         addPrefixed(KEY_OPEN, "Open Warp Radial");
         addPrefixed(SPAWN, "Spawn");
-        addPrefixed(SPAWN_TOOLTIP, style("Left click", TextFormatting.BLUE) + " to teleport to spawn");
+        addPrefixed(SPAWN_TOOLTIP, style("Left click", ChatFormatting.BLUE) + " to teleport to spawn");
         addPrefixed(HOME, "Home");
-        addPrefixed(HOME_TOOLTIP, style("Left click", TextFormatting.BLUE) + " to teleport to your home");
+        addPrefixed(HOME_TOOLTIP, style("Left click", ChatFormatting.BLUE) + " to teleport to your home");
         addPrefixed(PLAYER_WARPS, "Player Warps");
-        addPrefixed(PLAYER_WARPS_TOOLTIP, style("Left click", TextFormatting.BLUE) + " to see your player wraps");
+        addPrefixed(PLAYER_WARPS_TOOLTIP, style("Left click", ChatFormatting.BLUE) + " to see your player wraps");
         addPrefixed(SERVER_WARPS, "Server Warps");
-        addPrefixed(SERVER_WARPS_TOOLTIP, style("Left click", TextFormatting.BLUE) + " to see the servers wraps");
+        addPrefixed(SERVER_WARPS_TOOLTIP, style("Left click", ChatFormatting.BLUE) + " to see the servers wraps");
         addPrefixed(DIMENSION_TOOLTOP, "Dimension: %s");
         addPrefixed(ADD_MESSAGE, "Please input the name of the warp");
         addPrefixed(ADD_PLAYER_WARP_TOOLTIP, "Add player warp");

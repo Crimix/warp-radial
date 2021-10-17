@@ -2,22 +2,17 @@ package com.black_dog20.warpradial.common.network;
 
 import com.black_dog20.bml.network.messages.PacketPermission;
 import com.black_dog20.warpradial.WarpRadial;
-import com.black_dog20.warpradial.common.network.packets.PacketSyncPlayerWarps;
-import com.black_dog20.warpradial.common.network.packets.PacketSyncServerWarps;
-import com.black_dog20.warpradial.common.network.packets.PacketTeleportHome;
-import com.black_dog20.warpradial.common.network.packets.PacketTeleportPlayerWarp;
-import com.black_dog20.warpradial.common.network.packets.PacketTeleportServerWarp;
-import com.black_dog20.warpradial.common.network.packets.PacketTeleportSpawn;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import com.black_dog20.warpradial.common.network.packets.*;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -45,15 +40,15 @@ public class PacketHandler {
         registerMessage(PacketPermission.class, PacketPermission::encode, PacketPermission::decode, PacketPermission.Handler::handle);
     }
 
-    public static void sendTo(Object msg, ServerPlayerEntity player) {
+    public static void sendTo(Object msg, ServerPlayer player) {
         if (!(player instanceof FakePlayer))
-            NETWORK.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+            NETWORK.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static void sendToAll(Object msg, World world) {
-        for (PlayerEntity player : world.getPlayers()) {
+    public static void sendToAll(Object msg, Level world) {
+        for (Player player : world.players()) {
             if (!(player instanceof FakePlayer))
-                NETWORK.sendTo(msg, ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+                NETWORK.sendTo(msg, ((ServerPlayer) player).connection.connection, NetworkDirection.PLAY_TO_CLIENT);
         }
     }
 
@@ -61,14 +56,14 @@ public class PacketHandler {
         NETWORK.sendToServer(msg);
     }
 
-    private static <MSG> void registerMessage(Class<MSG> messageType, BiConsumer<MSG, PacketBuffer> encoder, Function<PacketBuffer, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) {
+    private static <MSG> void registerMessage(Class<MSG> messageType, BiConsumer<MSG, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) {
         NETWORK.registerMessage(index, messageType, encoder, decoder, messageConsumer);
         index++;
         if (index > 0xFF)
             throw new RuntimeException("Too many messages!");
     }
 
-    private static <MSG> void registerMessage(Class<MSG> messageType, BiConsumer<MSG, PacketBuffer> encoder, Function<PacketBuffer, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer, NetworkDirection direction) {
+    private static <MSG> void registerMessage(Class<MSG> messageType, BiConsumer<MSG, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer, NetworkDirection direction) {
         NETWORK.registerMessage(index, messageType, encoder, decoder, messageConsumer, Optional.of(direction));
         index++;
         if (index > 0xFF)

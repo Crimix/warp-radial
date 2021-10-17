@@ -5,6 +5,6 @@ import net.minecraft.client.Minecraft;
 public class ClientProxy implements IProxy {
     @Override
     public boolean isSinglePlayer() {
-        return Minecraft.getInstance().isSingleplayer();
+        return Minecraft.getInstance().hasSingleplayerServer();
     }
 }

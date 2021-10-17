@@ -6,10 +6,10 @@ import com.black_dog20.warpradial.common.util.DataManager;
 import com.black_dog20.warpradial.common.util.TeleportationHelper;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Util;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.Util;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -24,18 +24,18 @@ public class PacketTeleportPlayerWarp {
         this.warpName = name;
     }
 
-    public static void encode(PacketTeleportPlayerWarp msg, PacketBuffer buffer) {
-        buffer.writeString(msg.warpName);
+    public static void encode(PacketTeleportPlayerWarp msg, FriendlyByteBuf buffer) {
+        buffer.writeUtf(msg.warpName);
     }
 
-    public static PacketTeleportPlayerWarp decode(PacketBuffer buffer) {
-        return new PacketTeleportPlayerWarp(buffer.readString(32767));
+    public static PacketTeleportPlayerWarp decode(FriendlyByteBuf buffer) {
+        return new PacketTeleportPlayerWarp(buffer.readUtf(32767));
     }
 
     public static class Handler {
         public static void handle(PacketTeleportPlayerWarp msg, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
-                ServerPlayerEntity player = ctx.get().getSender();
+                ServerPlayer player = ctx.get().getSender();
                 if (player == null)
                     return;
 
@@ -53,12 +53,12 @@ public class PacketTeleportPlayerWarp {
                 if (warp.isPresent()) {
                     if (TeleportationUtil.teleportPlayerToDestination(player, warp.get())) {
                         TeleportationHelper.handleCooldown(player, Cooldown.PLAYER);
-                        player.sendMessage(TELPORTED_TO_WARP.get(msg.warpName), Util.DUMMY_UUID);
+                        player.sendMessage(TELPORTED_TO_WARP.get(msg.warpName), Util.NIL_UUID);
                     } else {
-                        player.sendMessage(COULD_NOT_TELEPORT.get(), Util.DUMMY_UUID);
+                        player.sendMessage(COULD_NOT_TELEPORT.get(), Util.NIL_UUID);
                     }
                 } else {
-                    player.sendMessage(NO_WARP.get(), Util.DUMMY_UUID);
+                    player.sendMessage(NO_WARP.get(), Util.NIL_UUID);
                 }
             });
             ctx.get().setPacketHandled(true);

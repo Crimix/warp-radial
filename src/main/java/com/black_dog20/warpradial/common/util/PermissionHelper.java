@@ -4,35 +4,35 @@ import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.data.Permission;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 public class PermissionHelper {
 
-    public static boolean canCreateOrDelete(CommandSource source) {
+    public static boolean canCreateOrDelete(CommandSourceStack source) {
         return canCreate(source) || canDelete(source);
     }
 
-    public static boolean canCreate(CommandSource source) {
+    public static boolean canCreate(CommandSourceStack source) {
         try {
-            return DataManager.playerHasPermission(source.asPlayer(), Permission.CAN_CREATE_SERVER_WARPS);
+            return DataManager.playerHasPermission(source.getPlayerOrException(), Permission.CAN_CREATE_SERVER_WARPS);
         } catch (CommandSyntaxException e) {
             return false;
         }
     }
 
-    public static boolean canDelete(CommandSource source) {
+    public static boolean canDelete(CommandSourceStack source) {
         try {
-            return DataManager.playerHasPermission(source.asPlayer(), Permission.CAN_DELETE_SERVER_WARPS);
+            return DataManager.playerHasPermission(source.getPlayerOrException(), Permission.CAN_DELETE_SERVER_WARPS);
         } catch (CommandSyntaxException e) {
             return false;
         }
     }
 
-    public static boolean onlyOpsRuleNotActiveOrCanUse(CommandSource source) {
+    public static boolean onlyOpsRuleNotActiveOrCanUse(CommandSourceStack source) {
         if (!Config.ONLY_PERMISSION_PLAYERS_CAN_USE_MENU.get())
             return true;
         try {
-            return source.hasPermissionLevel(2) || WarpRadial.Proxy.isSinglePlayer() || DataManager.playerHasPermission(source.asPlayer(), Permission.CAN_USE_MENU);
+            return source.hasPermission(2) || WarpRadial.Proxy.isSinglePlayer() || DataManager.playerHasPermission(source.getPlayerOrException(), Permission.CAN_USE_MENU);
         } catch (CommandSyntaxException e) {
             return false;
         }

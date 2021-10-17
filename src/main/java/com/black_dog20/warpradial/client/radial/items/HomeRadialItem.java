@@ -6,11 +6,11 @@ import com.black_dog20.warpradial.common.network.PacketHandler;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportHome;
 import com.black_dog20.warpradial.common.util.TranslationHelper;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ public class HomeRadialItem extends TextRadialItem {
     }
 
     @Override
-    public List<ITextComponent> getTooltips() {
-        List<ITextComponent> tooltips = new ArrayList<>();
+    public List<Component> getTooltips() {
+        List<Component> tooltips = new ArrayList<>();
         tooltips.add(HOME_TOOLTIP.get());
         tooltips.addAll(super.getTooltips());
         return tooltips;
@@ -41,32 +41,32 @@ public class HomeRadialItem extends TextRadialItem {
         IRadialItem set = new TextRadialItem(SET_HOME_TOOLTIP.get()) {
             @Override
             public void click() {
-                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, SET_HOME_TOOLTIP.get(TextFormatting.BOLD), SET_HOME_MESSAGE.get());
-                Minecraft.getInstance().displayGuiScreen(screen);
-                screen.setButtonDelay(20);
+                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, SET_HOME_TOOLTIP.get(ChatFormatting.BOLD), SET_HOME_MESSAGE.get());
+                Minecraft.getInstance().setScreen(screen);
+                screen.setDelay(20);
             }
 
             private void onConfirmClick(boolean value) {
                 if (value) {
-                    Minecraft.getInstance().player.sendChatMessage("/warpradial home set ");
+                    Minecraft.getInstance().player.chat("/warpradial home set ");
                 }
-                Minecraft.getInstance().displayGuiScreen((Screen) null);
+                Minecraft.getInstance().setScreen((Screen) null);
             }
         };
 
         IRadialItem remove = new TextRadialItem(REMOVE_HOME_TOOLTIP.get()) {
             @Override
             public void click() {
-                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, REMOVE_HOME_TOOLTIP.get(TextFormatting.BOLD), REMOVE_MESSAGE.get(TranslationHelper.translateToString(HOME)));
-                Minecraft.getInstance().displayGuiScreen(screen);
-                screen.setButtonDelay(20);
+                ConfirmScreen screen = new ConfirmScreen(this::onConfirmClick, REMOVE_HOME_TOOLTIP.get(ChatFormatting.BOLD), REMOVE_MESSAGE.get(TranslationHelper.translateToString(HOME)));
+                Minecraft.getInstance().setScreen(screen);
+                screen.setDelay(20);
             }
 
             private void onConfirmClick(boolean value) {
                 if (value) {
-                    Minecraft.getInstance().player.sendChatMessage("/warpradial home remove ");
+                    Minecraft.getInstance().player.chat("/warpradial home remove ");
                 }
-                Minecraft.getInstance().displayGuiScreen((Screen) null);
+                Minecraft.getInstance().setScreen((Screen) null);
             }
         };
         return ImmutableList.of(set, remove);
