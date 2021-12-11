@@ -38,10 +38,10 @@ public class TeleportationHelper {
             return true;
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         int level = server.getPermissionLevel(player.getGameProfile());
-        if (!DataManager.playerHasPermission(player, Permission.CAN_USE_MENU) || level >= Config.USE_MENU_PERMISSION_LEVEL.get()) {
-            player.sendMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get(), Util.DUMMY_UUID);
+        if (DataManager.playerHasPermission(player, Permission.CAN_USE_MENU) || level >= Config.USE_MENU_PERMISSION_LEVEL.get()) {
             return true;
         }
+        player.sendMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get(), Util.DUMMY_UUID);
         return false;
     }
 }
