@@ -2,17 +2,22 @@ package com.black_dog20.warpradial.common.network;
 
 import com.black_dog20.bml.network.messages.PacketPermission;
 import com.black_dog20.warpradial.WarpRadial;
-import com.black_dog20.warpradial.common.network.packets.*;
+import com.black_dog20.warpradial.common.network.packets.PacketSyncPlayerWarps;
+import com.black_dog20.warpradial.common.network.packets.PacketSyncServerWarps;
+import com.black_dog20.warpradial.common.network.packets.PacketTeleportHome;
+import com.black_dog20.warpradial.common.network.packets.PacketTeleportPlayerWarp;
+import com.black_dog20.warpradial.common.network.packets.PacketTeleportServerWarp;
+import com.black_dog20.warpradial.common.network.packets.PacketTeleportSpawn;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;

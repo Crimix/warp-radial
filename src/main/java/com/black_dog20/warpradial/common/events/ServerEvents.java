@@ -8,9 +8,9 @@ import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 
 @Mod.EventBusSubscriber(modid = WarpRadial.MOD_ID)
 public class ServerEvents {
@@ -27,7 +27,7 @@ public class ServerEvents {
     }
 
     @SubscribeEvent
-    public static void onServerStarting(FMLServerStartingEvent event) {
+    public static void onServerStarting(ServerStartingEvent event) {
         try {
             ServerLevel world = event.getServer().overworld();
 

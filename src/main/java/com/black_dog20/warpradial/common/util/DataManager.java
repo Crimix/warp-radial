@@ -13,7 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -234,7 +234,7 @@ public class DataManager {
 
         String uuid = playerEntity.getUUID().toString();
         PlayerPermissions playerPermissions = getPlayerPermission(playerEntity);
-        playerPermissions.rework(permission);
+        playerPermissions.revoke(permission);
         PLAYER_PERMISIONS.put(uuid, playerPermissions);
         savePlayerPermissions(world);
         syncPermissionsToClient(playerEntity);
