@@ -1,9 +1,12 @@
 # Warp Radial Changelog
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
-## [1.17.1, 1.0.1-b1] - 2021-08-xx
+## [1.17.1, 1.0.2] - 2021-12-11
 - Port to 1.17.1
-- Will be in beta until full Forge release, expect things to break.
+- Fixed permission bug in only op mode
+- Fixed typos
+- Added new config setting to only allow ops or specific players to use server warps
+- Added new permission: canUseServerWarp
 
 ## [1.16.3, 1.0.1] - 2020-11-21
 - Ported to 1.16.3+

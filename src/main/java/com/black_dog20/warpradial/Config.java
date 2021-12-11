@@ -43,10 +43,12 @@ public class Config {
     public static ForgeConfigSpec.IntValue COOLDOWN_SERVER_WARP;
     public static ForgeConfigSpec.BooleanValue LOG_WARPS;
     public static ForgeConfigSpec.BooleanValue ONLY_PERMISSION_PLAYERS_CAN_USE_MENU;
+    public static ForgeConfigSpec.BooleanValue ONLY_PERMISSION_PLAYERS_CAN_USE_SERVER_WARPS;
     public static ForgeConfigSpec.BooleanValue INFORM_USER_OF_MISSING_PERMISSION;
     public static ForgeConfigSpec.IntValue SERVER_WARP_CREATE_PERMISSION_LEVEL;
     public static ForgeConfigSpec.IntValue SERVER_WARP_DELETE_PERMISSION_LEVEL;
     public static ForgeConfigSpec.IntValue USE_MENU_PERMISSION_LEVEL;
+    public static ForgeConfigSpec.IntValue USE_SERVER_WARP_PERMISSION_LEVEL;
     public static ForgeConfigSpec.IntValue PERMISSION_COMMAND_PERMISSION_LEVEL;
 
     static {
@@ -98,15 +100,19 @@ public class Config {
                 .define("logging", true);
         ONLY_PERMISSION_PLAYERS_CAN_USE_MENU = SERVER_BUILDER.comment("Only allow ops and players with specific permission to use the radial menu")
                 .define("onlyOpsMenu", false);
-        INFORM_USER_OF_MISSING_PERMISSION = SERVER_BUILDER.comment("Inform the player that they do not have the required permission to use the menu")
+        ONLY_PERMISSION_PLAYERS_CAN_USE_SERVER_WARPS = SERVER_BUILDER.comment("Only allow ops and players with specific permission to teleport to server warps")
+                .define("onlyOpsServerWarpTeleport", false);
+        INFORM_USER_OF_MISSING_PERMISSION = SERVER_BUILDER.comment("Inform the player that they do not have the required permission to use the menu or teleport")
                 .define("tellUsersOpsMenu", true);
         SERVER_WARP_CREATE_PERMISSION_LEVEL = SERVER_BUILDER.comment("The op permission level the player must have to be able to use create server warp command")
                 .defineInRange("createPermissionLevel", 1, 1, 4);
         SERVER_WARP_DELETE_PERMISSION_LEVEL = SERVER_BUILDER.comment("The op permission level the player must have to be able to use delete server warp command")
                 .defineInRange("deletePermissionLevel", 2, 1, 4);
-        USE_MENU_PERMISSION_LEVEL = SERVER_BUILDER.comment("The op permission level the player must have to be able to use the radial menu")
+        USE_MENU_PERMISSION_LEVEL = SERVER_BUILDER.comment("The op permission level the player must have to be able to use the radial menu", "If onlyOpsMenu = true")
                 .defineInRange("usePermissionLevel", 1, 1, 4);
-        PERMISSION_COMMAND_PERMISSION_LEVEL = SERVER_BUILDER.comment("The op permission level the player must have to be able to use permission grant and rework commands")
+        USE_SERVER_WARP_PERMISSION_LEVEL = SERVER_BUILDER.comment("The op permission level the player must have to be able to use server warps", "If onlyOpsServerWarpTeleport=true")
+                .defineInRange("useServerWarpPermissionLevel", 1, 1, 4);
+        PERMISSION_COMMAND_PERMISSION_LEVEL = SERVER_BUILDER.comment("The op permission level the player must have to be able to use permission grant and revoke commands")
                 .defineInRange("permissionsPermissionLevel", 2, 1, 4);
         SERVER_BUILDER.pop();
 

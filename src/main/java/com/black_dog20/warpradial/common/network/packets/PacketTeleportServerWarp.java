@@ -45,6 +45,9 @@ public class PacketTeleportServerWarp {
                 if (!TeleportationHelper.checkPermission(player))
                     return;
 
+                if (!TeleportationHelper.checkServerWarpPermission(player))
+                    return;
+
                 if (!TeleportationHelper.canTeleport(player, Cooldown.SERVER))
                     return;
 

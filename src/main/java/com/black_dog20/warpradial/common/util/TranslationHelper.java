@@ -46,6 +46,8 @@ public class TranslationHelper extends TranslationUtil {
         PERMISSIONS_CAN_DELETE_REMOVED("msg.can_delete_server_warps_removed"),
         PERMISSIONS_CAN_USE_ADDED("msg.can_use_added"),
         PERMISSIONS_CAN_USE_REMOVED("msg.can_use_removed"),
+        PERMISSIONS_CAN_USE_SERVER_WARP_ADDED("msg.can_use_server_warp_added"),
+        PERMISSIONS_CAN_USE_SERVER_WARP_REMOVED("msg.can_use_server_warp_removed"),
         DENIED_MENU_USE("msg.can_not_use"),
         ;
 

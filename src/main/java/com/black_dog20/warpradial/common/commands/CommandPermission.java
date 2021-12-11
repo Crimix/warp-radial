@@ -41,7 +41,12 @@ public class CommandPermission implements ICommand {
                 .then(Commands.literal("delete")
                         .then(Commands.argument("playerName", EntityArgument.player())
                                 .then(Commands.argument("value", BoolArgumentType.bool())
-                                        .executes(this::delete))));
+                                        .executes(this::delete))))
+                .then(Commands.literal("use")
+                        .requires(soruce -> Config.ONLY_PERMISSION_PLAYERS_CAN_USE_SERVER_WARPS.get())
+                        .then(Commands.argument("playerName", EntityArgument.player())
+                                .then(Commands.argument("value", BoolArgumentType.bool())
+                                        .executes(this::useServerWarp))));
     }
 
     private ArgumentBuilder<CommandSourceStack, ?> onlyOps() {
@@ -83,6 +88,22 @@ public class CommandPermission implements ICommand {
         } else {
             DataManager.removePlayerPermission(player, Permission.CAN_DELETE_SERVER_WARPS);
             msg = PERMISSIONS_CAN_DELETE_REMOVED.get(getPlayerNameColored(player));
+        }
+        context.getSource().sendSuccess(msg, true);
+        informPlayer(context, player, msg);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    public int useServerWarp(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = EntityArgument.getPlayer(context, "playerName");
+        boolean bool = BoolArgumentType.getBool(context, "value");
+        Component msg;
+        if (bool) {
+            DataManager.addPlayerPermission(player, Permission.CAN_USE_SERVER_WARP);
+            msg = PERMISSIONS_CAN_USE_SERVER_WARP_ADDED.get(getPlayerNameColored(player));
+        } else {
+            DataManager.removePlayerPermission(player, Permission.CAN_USE_SERVER_WARP);
+            msg = PERMISSIONS_CAN_USE_SERVER_WARP_REMOVED.get(getPlayerNameColored(player));
         }
         context.getSource().sendSuccess(msg, true);
         informPlayer(context, player, msg);

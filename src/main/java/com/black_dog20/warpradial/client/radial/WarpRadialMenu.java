@@ -4,11 +4,13 @@ import com.black_dog20.bml.client.radial.api.AbstractRadialMenu;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.utils.keybinds.KeybindsUtil;
 import com.black_dog20.warpradial.Config;
+import com.black_dog20.warpradial.client.ClientDataManager;
 import com.black_dog20.warpradial.client.keybinds.Keybinds;
 import com.black_dog20.warpradial.client.radial.items.HomeRadialItem;
 import com.black_dog20.warpradial.client.radial.items.PlayerWarpsRadialCategory;
 import com.black_dog20.warpradial.client.radial.items.ServerWarpsRadialCategory;
 import com.black_dog20.warpradial.client.radial.items.SpawnRadialItem;
+import com.black_dog20.warpradial.common.util.data.Permission;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class WarpRadialMenu extends AbstractRadialMenu {
         List<IRadialItem> items = new ArrayList<>();
         if (Config.WARP_TO_SPAWN_ALLOWED.get())
             items.add(new SpawnRadialItem());
-        if (Config.SERVER_WARPS_ALLOWED.get())
+        if (Config.SERVER_WARPS_ALLOWED.get() && canUseServerWarps())
             items.add(new ServerWarpsRadialCategory());
         if (Config.HOMES_ALLOWED.get())
             items.add(new HomeRadialItem());
@@ -62,5 +64,9 @@ public class WarpRadialMenu extends AbstractRadialMenu {
     @Override
     public boolean isScrollInverted() {
         return Config.RADIAL_SCROLL_INVERTED.get();
+    }
+
+    private static boolean canUseServerWarps() {
+        return !Config.ONLY_PERMISSION_PLAYERS_CAN_USE_SERVER_WARPS.get() || ClientDataManager.getPermissionOrIsOpOrSinglePlayer(Permission.CAN_USE_SERVER_WARP);
     }
 }

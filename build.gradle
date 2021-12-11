@@ -176,7 +176,7 @@ curseforge {
         id = '375446'
         changelogType = 'markdown'
         changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.17/CHANGELOG.md)'
-        releaseType = 'beta'
+        releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 16'
         addGameVersion '1.17.1'

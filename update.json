@@ -14,7 +14,7 @@
     "1.0.1": "https://github.com/Crimix/warp-radial/blob/1.16/CHANGELOG.md"
   },
   "1.17.1": {
-    "1.0.1-b1": "https://github.com/Crimix/warp-radial/blob/1.17/CHANGELOG.md"
+    "1.0.2": "https://github.com/Crimix/warp-radial/blob/1.17/CHANGELOG.md"
   },
   "promos": {
     "1.15.2-latest": "1.0.1",
@@ -25,7 +25,7 @@
     "1.16.4-recommended": "1.0.1",
     "1.16.5-latest": "1.0.1",
     "1.16.5-recommended": "1.0.1",
-    "1.17.1-latest": "1.0.1-b1",
-    "1.17.1-recommended": "1.0.1-b1"
+    "1.17.1-latest": "1.0.2",
+    "1.17.1-recommended": "1.0.2"
   }
 }

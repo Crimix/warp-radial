@@ -52,11 +52,13 @@ public class GeneratorLanguage extends BaseLanguageProvider {
         addPrefixed(COULD_NOT_TELEPORT, "Failed to teleport!");
         addPrefixed(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION, "Failed to teleport, insufficient permission!");
         addPrefixed(PERMISSIONS_CAN_CREATE_ADDED, "Granted %s permission to create server warps");
-        addPrefixed(PERMISSIONS_CAN_CREATE_REMOVED, "Reworked %s's permission to create server warps");
+        addPrefixed(PERMISSIONS_CAN_CREATE_REMOVED, "Revoked %s's permission to create server warps");
         addPrefixed(PERMISSIONS_CAN_DELETE_ADDED, "Granted %s permission to delete server warps");
-        addPrefixed(PERMISSIONS_CAN_DELETE_REMOVED, "Reworked %s's permission to delete server warps");
+        addPrefixed(PERMISSIONS_CAN_DELETE_REMOVED, "Revoked %s's permission to delete server warps");
         addPrefixed(PERMISSIONS_CAN_USE_ADDED, "Granted %s permission to use radial menu");
-        addPrefixed(PERMISSIONS_CAN_USE_REMOVED, "Reworked %s's permission to use radial menu");
+        addPrefixed(PERMISSIONS_CAN_USE_REMOVED, "Revoked %s's permission to use radial menu");
+        addPrefixed(PERMISSIONS_CAN_USE_SERVER_WARP_ADDED, "Granted %s permission to use server warps");
+        addPrefixed(PERMISSIONS_CAN_USE_SERVER_WARP_REMOVED, "Revoked %s's permission to use server warps");
         addPrefixed(DENIED_MENU_USE, "You do not have the required permissions to use the warp menu");
     }
 }

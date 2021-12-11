@@ -24,7 +24,7 @@ public class ClientDataManager {
         return Minecraft.getInstance().hasSingleplayerServer() || hasLevelTo(permission) || getPermission(permission);
     }
 
-    public static boolean getPermission(Permission permission) {
+    private static boolean getPermission(Permission permission) {
         return PLAYER_PERMISSION.map(p -> p.hasPermission(permission))
                 .orElse(false);
     }
@@ -40,6 +40,8 @@ public class ClientDataManager {
                 return player.hasPermissions(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get());
             case CAN_USE_MENU:
                 return player.hasPermissions(Config.USE_MENU_PERMISSION_LEVEL.get());
+            case CAN_USE_SERVER_WARP:
+                return player.hasPermissions(Config.USE_SERVER_WARP_PERMISSION_LEVEL.get());
         }
 
         return false;

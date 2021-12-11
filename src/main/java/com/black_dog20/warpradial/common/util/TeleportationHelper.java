@@ -38,10 +38,22 @@ public class TeleportationHelper {
             return true;
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         int level = server.getProfilePermissions(player.getGameProfile());
-        if (!DataManager.playerHasPermission(player, Permission.CAN_USE_MENU) || level >= Config.USE_MENU_PERMISSION_LEVEL.get()) {
-            player.sendMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get(), Util.NIL_UUID);
+        if (DataManager.playerHasPermission(player, Permission.CAN_USE_MENU) || level >= Config.USE_MENU_PERMISSION_LEVEL.get()) {
             return true;
         }
+        player.sendMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get(), Util.NIL_UUID);
+        return false;
+    }
+
+    public static boolean checkServerWarpPermission(ServerPlayer player) {
+        if (!Config.ONLY_PERMISSION_PLAYERS_CAN_USE_SERVER_WARPS.get())
+            return true;
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        int level = server.getProfilePermissions(player.getGameProfile());
+        if (DataManager.playerHasPermission(player, Permission.CAN_USE_SERVER_WARP) || level >= Config.USE_SERVER_WARP_PERMISSION_LEVEL.get()) {
+            return true;
+        }
+        player.sendMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get(), Util.NIL_UUID);
         return false;
     }
 }

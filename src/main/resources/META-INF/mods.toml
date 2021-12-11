@@ -18,7 +18,7 @@ description='''Commands are fine, but have you seen this radial menu, it rocks''
 [[dependencies.warpradial]]
     modId="forge"
     mandatory=true
-    versionRange="[37,)"
+    versionRange="[37.0.59,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.warpradial]]
