@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[38,)"
+loaderVersion="[39,)"
 issueTrackerURL="https://github.com/Crimix/wrap-radial/issues"
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 license="All rights reserved"
@@ -18,13 +18,13 @@ description='''Commands are fine, but have you seen this radial menu, it rocks''
 [[dependencies.warpradial]]
     modId="forge"
     mandatory=true
-    versionRange="[38.0.17,)"
+    versionRange="[39.0.5,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.warpradial]]
     modId="minecraft"
     mandatory=true
-   versionRange="[1.18,1.19)"
+   versionRange="[1.18.1,1.19)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.warpradial]]
