@@ -176,7 +176,7 @@ curseforge {
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 17'
-        addGameVersion '1.18.1'
+        addGameVersion '1.18.2'
         relations {
             requiredDependency 'bml'
         }

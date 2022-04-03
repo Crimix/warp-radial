@@ -1,14 +1,14 @@
 modLoader="javafml"
-loaderVersion="[39,)"
+loaderVersion="${loader_version_range}"
 issueTrackerURL="https://github.com/Crimix/wrap-radial/issues"
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 license="All rights reserved"
 
 [[mods]]
 modId="warpradial"
-version="${file.jarVersion}"
+version="${version}"
 displayName="Wrap Radial"
-updateJSONURL="https://raw.githubusercontent.com/Crimix/warp-radial/1.18/update.json"
+updateJSONURL="${update_url}"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/warp-radial"
 logoFile="warp-radial-logo.png"
 credits="To all my friends for putting up with me breaking the server multiple times during testing"
@@ -18,18 +18,18 @@ description='''Commands are fine, but have you seen this radial menu, it rocks''
 [[dependencies.warpradial]]
     modId="forge"
     mandatory=true
-    versionRange="[39.0.5,)"
+    versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
 [[dependencies.warpradial]]
     modId="minecraft"
     mandatory=true
-   versionRange="[1.18.1,1.19)"
+    versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 [[dependencies.warpradial]]
     modId="blackdogsmoddinglibrary"
     mandatory=true
-    versionRange="[1.1.5-a2,)" #TODO Remove -a2
+    versionRange="${bml_version_range}"
     ordering="BEFORE"
     side="BOTH"
