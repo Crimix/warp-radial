@@ -1,5 +1,7 @@
-[![](http://cf.way2muchnoise.eu/full_warp-radial_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/warp-radial)
-[![](http://cf.way2muchnoise.eu/versions/warp-radial.svg)](https://www.curseforge.com/minecraft/mc-mods/warp-radial)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fcurseforge-badge-shields-io-caaw7pcenm0t.runkit.sh%2Fdownloads%3FprojectId%3D375446%26mode%3Dfull)](https://minecraft.curseforge.com/projects/warp-radial)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fcurseforge-badge-shields-io-caaw7pcenm0t.runkit.sh%2Fversions%3FprojectId%3D375446)](https://minecraft.curseforge.com/projects/warp-radial)   
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh/%2Fdownloads%3FprojectId%3DKZhrfAvS%26mode%3Dfull)](https://modrinth.com/mod/warp-radial)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh%2Fversions%3FprojectId%3DKZhrfAvS)](https://modrinth.com/mod/warp-radial)
 # Warp Radial
 [Warp Radial](https://www.curseforge.com/minecraft/mc-mods/warp-radial) is inspired by older versions of FTB-Utilities where you could add warp points and there were this really nice radial menu to select the warp point to teleport to.  
 This is my take on a radial menu for this exact purpose.
