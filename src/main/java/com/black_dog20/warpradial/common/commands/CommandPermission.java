@@ -12,7 +12,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -134,10 +133,10 @@ public class CommandPermission implements ICommand {
         if (context.getSource().getEntity() instanceof ServerPlayer) {
             Player source = context.getSource().getPlayerOrException();
             if (!source.equals(player)) {
-                player.sendMessage(msg, Util.NIL_UUID);
+                player.sendSystemMessage(msg);
             }
         } else {
-            player.sendMessage(msg, Util.NIL_UUID);
+            player.sendSystemMessage(msg);
         }
     }
 

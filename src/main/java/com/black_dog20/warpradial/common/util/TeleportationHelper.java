@@ -3,7 +3,6 @@ package com.black_dog20.warpradial.common.util;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import com.black_dog20.warpradial.common.util.data.Permission;
-import net.minecraft.Util;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -16,14 +15,14 @@ public class TeleportationHelper {
     public static boolean canTeleport(Player player, Cooldown cooldown) {
         if (WarpPlayerProperties.isOnGlobalCooldown(player, cooldown)) {
             long remainingSecs = WarpPlayerProperties.getRemainingCooldown(player, Cooldown.GLOBAL);
-            player.sendMessage(COOLDOWN_MSG.get(), Util.NIL_UUID);
-            player.sendMessage(COOLDOWN_MSG_2.get(remainingSecs), Util.NIL_UUID);
+            player.sendSystemMessage(COOLDOWN_MSG.get());
+            player.sendSystemMessage(COOLDOWN_MSG_2.get(remainingSecs));
             return false;
         }
         if (WarpPlayerProperties.isOnCooldown(player, cooldown)) {
             long remainingSecs = WarpPlayerProperties.getRemainingCooldown(player, cooldown);
-            player.sendMessage(COOLDOWN_MSG.get(), Util.NIL_UUID);
-            player.sendMessage(COOLDOWN_MSG_2.get(remainingSecs), Util.NIL_UUID);
+            player.sendSystemMessage(COOLDOWN_MSG.get());
+            player.sendSystemMessage(COOLDOWN_MSG_2.get(remainingSecs));
             return false;
         }
         return true;
@@ -41,7 +40,7 @@ public class TeleportationHelper {
         if (DataManager.playerHasPermission(player, Permission.CAN_USE_MENU) || level >= Config.USE_MENU_PERMISSION_LEVEL.get()) {
             return true;
         }
-        player.sendMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get(), Util.NIL_UUID);
+        player.sendSystemMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get());
         return false;
     }
 
@@ -53,7 +52,7 @@ public class TeleportationHelper {
         if (DataManager.playerHasPermission(player, Permission.CAN_USE_SERVER_WARP) || level >= Config.USE_SERVER_WARP_PERMISSION_LEVEL.get()) {
             return true;
         }
-        player.sendMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get(), Util.NIL_UUID);
+        player.sendSystemMessage(COULD_NOT_TELEPORT_INSUFFICIENT_PERMISSION.get());
         return false;
     }
 }

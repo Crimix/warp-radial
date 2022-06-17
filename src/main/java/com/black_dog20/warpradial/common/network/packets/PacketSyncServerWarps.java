@@ -46,7 +46,7 @@ public class PacketSyncServerWarps {
         for (Map.Entry<String, WarpDestination> kvp : warps) {
             String key = kvp.getKey();
             WarpDestination value = kvp.getValue();
-            serverWarps.add(new Triple<>(key, value.getDimension().getRegistryName().getPath(), value.getTimestamp()));
+            serverWarps.add(new Triple<>(key, value.getDimension().registry().getPath(), value.getTimestamp()));
         }
         this.warps = serverWarps;
     }

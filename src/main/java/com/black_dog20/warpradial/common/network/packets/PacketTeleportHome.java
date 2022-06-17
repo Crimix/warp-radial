@@ -6,7 +6,6 @@ import com.black_dog20.warpradial.common.util.DataManager;
 import com.black_dog20.warpradial.common.util.TeleportationHelper;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
-import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -49,12 +48,12 @@ public class PacketTeleportHome {
                 if (home.isPresent()) {
                     if (TeleportationUtil.teleportPlayerToDestination(player, home.get())) {
                         TeleportationHelper.handleCooldown(player, Cooldown.HOME);
-                        player.sendMessage(TELPORTED_TO_HOME.get(), Util.NIL_UUID);
+                        player.sendSystemMessage(TELPORTED_TO_HOME.get());
                     } else {
-                        player.sendMessage(COULD_NOT_TELEPORT.get(), Util.NIL_UUID);
+                        player.sendSystemMessage(COULD_NOT_TELEPORT.get());
                     }
                 } else {
-                    player.sendMessage(NO_HOME.get(), Util.NIL_UUID);
+                    player.sendSystemMessage(NO_HOME.get());
                 }
             });
             ctx.get().setPacketHandled(true);

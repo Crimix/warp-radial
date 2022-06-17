@@ -10,9 +10,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class ClientPlayerDestination extends TextRadialItem {
     private final long created;
 
     public ClientPlayerDestination(String name, String dimensionName, long created) {
-        super(new TextComponent(name));
+        super(Component.literal(name));
         this.name = name;
         this.dimensionName = dimensionName;
         this.created = created;
@@ -35,7 +34,7 @@ public class ClientPlayerDestination extends TextRadialItem {
     @Override
     public List<Component> getTooltips() {
         List<Component> tooltips = new ArrayList<>();
-        BaseComponent dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
+        MutableComponent dimension = DimensionUtil.getFormattedDimensionName(dimensionName);
         tooltips.add(DIMENSION_TOOLTOP.get(dimension));
         tooltips.addAll(super.getTooltips());
         return tooltips;

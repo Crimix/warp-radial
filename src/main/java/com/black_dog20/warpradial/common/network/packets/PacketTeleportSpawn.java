@@ -4,7 +4,6 @@ import com.black_dog20.bml.utils.player.TeleportationUtil;
 import com.black_dog20.warpradial.Config;
 import com.black_dog20.warpradial.common.util.TeleportationHelper;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
-import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -44,9 +43,9 @@ public class PacketTeleportSpawn {
 
                 if (TeleportationUtil.teleportPlayerToSpawn(player)) {
                     TeleportationHelper.handleCooldown(player, Cooldown.SPAWN);
-                    player.sendMessage(TELPORTED_TO_SPAWN.get(), Util.NIL_UUID);
+                    player.sendSystemMessage(TELPORTED_TO_SPAWN.get());
                 } else {
-                    player.sendMessage(COULD_NOT_TELEPORT.get(), Util.NIL_UUID);
+                    player.sendSystemMessage(COULD_NOT_TELEPORT.get());
                 }
             });
             ctx.get().setPacketHandled(true);

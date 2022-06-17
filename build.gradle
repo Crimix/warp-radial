@@ -172,7 +172,7 @@ curseforge {
     project {
         id = '375446'
         changelogType = 'markdown'
-        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.18/CHANGELOG.md)'
+        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.19/CHANGELOG.md)'
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 17'
@@ -187,7 +187,7 @@ modrinth {
     token = modrinth_token
     projectId = "KZhrfAvS"
     uploadFile = jar
-    changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.18/CHANGELOG.md)'
+    changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.19/CHANGELOG.md)'
     versionType = "release"
     loaders = ["forge"]
     gameVersions = ["1.18.2"]
