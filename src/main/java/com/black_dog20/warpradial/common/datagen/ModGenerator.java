@@ -3,9 +3,9 @@ package com.black_dog20.warpradial.common.datagen;
 import com.black_dog20.warpradial.WarpRadial;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod.EventBusSubscriber(modid = WarpRadial.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModGenerator {

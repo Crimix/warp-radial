@@ -17,8 +17,8 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getPlayer().level.isClientSide) {
-            ServerPlayer playerEntity = (ServerPlayer) event.getPlayer();
+        if (!event.getEntity().level.isClientSide) {
+            ServerPlayer playerEntity = (ServerPlayer) event.getEntity();
             DataManager.syncPlayerWarpsToClient(playerEntity);
             DataManager.syncServerWarpsToClient(playerEntity);
 
