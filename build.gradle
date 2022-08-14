@@ -172,11 +172,13 @@ curseforge {
     project {
         id = '375446'
         changelogType = 'markdown'
-        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.19/CHANGELOG.md)'
+        changelog = "As always find the changelog here [CHANGELOG](${changelog_url})"
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 17'
-        addGameVersion '1.18.2'
+        addGameVersion '1.19'
+        addGameVersion '1.19.1'
+        addGameVersion '1.19.2'
         relations {
             requiredDependency 'bml'
         }
@@ -187,10 +189,11 @@ modrinth {
     token = modrinth_token
     projectId = "KZhrfAvS"
     uploadFile = jar
-    changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/warp-radial/blob/1.19/CHANGELOG.md)'
+    versionNumber = "${mc_version}-${version}"
+    changelog = "As always find the changelog here [CHANGELOG](${changelog_url})"
     versionType = "release"
     loaders = ["forge"]
-    gameVersions = ["1.18.2"]
+    gameVersions = ["1.19", "1.19.1", "1.19.2"]
     dependencies {
         required.project "FbqCRYwN"
     }
