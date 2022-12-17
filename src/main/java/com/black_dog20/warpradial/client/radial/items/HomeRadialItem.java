@@ -48,7 +48,7 @@ public class HomeRadialItem extends TextRadialItem {
 
             private void onConfirmClick(boolean value) {
                 if (value) {
-                    Minecraft.getInstance().player.command("warpradial home set");
+                    Minecraft.getInstance().player.connection.sendCommand("warpradial home set");
                 }
                 Minecraft.getInstance().setScreen((Screen) null);
             }
@@ -64,7 +64,7 @@ public class HomeRadialItem extends TextRadialItem {
 
             private void onConfirmClick(boolean value) {
                 if (value) {
-                    Minecraft.getInstance().player.command("warpradial home remove");
+                    Minecraft.getInstance().player.connection.sendCommand("warpradial home remove");
                 }
                 Minecraft.getInstance().setScreen((Screen) null);
             }

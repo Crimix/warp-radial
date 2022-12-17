@@ -1,6 +1,9 @@
 # Warp Radial Changelog
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [1.19.3, 1.0.3] - 2022-12-17
+- Port to 1.19.3
+
 ## [1.19, 1.0.3] - 2022-08-14
 - Port to 1.19
 

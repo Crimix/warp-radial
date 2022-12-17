@@ -62,7 +62,7 @@ public class ServerWarpsRadialCategory extends TextRadialCategory {
 
             private void onConfirmClick(boolean value, String name) {
                 if (value && !StringUtil.isNullOrEmpty(name)) {
-                    Minecraft.getInstance().player.command("warpradial serverwarp add " + name);
+                    Minecraft.getInstance().player.connection.sendCommand("warpradial serverwarp add " + name);
                 }
                 Minecraft.getInstance().setScreen((Screen) null);
             }

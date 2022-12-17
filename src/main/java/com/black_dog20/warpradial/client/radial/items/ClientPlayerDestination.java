@@ -57,7 +57,7 @@ public class ClientPlayerDestination extends TextRadialItem {
 
             private void onConfirmClick(boolean value) {
                 if (value) {
-                    Minecraft.getInstance().player.command("warpradial warp remove " + name);
+                    Minecraft.getInstance().player.connection.sendCommand("warpradial warp remove " + name);
                 }
                 Minecraft.getInstance().setScreen((Screen) null);
             }
