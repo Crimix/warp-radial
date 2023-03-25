@@ -10,7 +10,7 @@ import static com.black_dog20.warpradial.common.util.TranslationHelper.Translati
 public class GeneratorLanguage extends BaseLanguageProvider {
 
     public GeneratorLanguage(DataGenerator gen) {
-        super(gen, WarpRadial.MOD_ID, "en_us");
+        super(gen.getPackOutput(), WarpRadial.MOD_ID, "en_us");
     }
 
     @Override
