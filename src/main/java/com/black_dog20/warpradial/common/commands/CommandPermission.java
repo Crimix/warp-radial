@@ -72,7 +72,7 @@ public class CommandPermission implements ICommand {
             DataManager.removePlayerPermission(player, Permission.CAN_CREATE_SERVER_WARPS);
             msg = PERMISSIONS_CAN_CREATE_REMOVED.get(getPlayerNameColored(player));
         }
-        context.getSource().sendSuccess(msg, true);
+        context.getSource().sendSuccess(() -> msg, true);
         informPlayer(context, player, msg);
         return Command.SINGLE_SUCCESS;
     }
@@ -88,7 +88,7 @@ public class CommandPermission implements ICommand {
             DataManager.removePlayerPermission(player, Permission.CAN_DELETE_SERVER_WARPS);
             msg = PERMISSIONS_CAN_DELETE_REMOVED.get(getPlayerNameColored(player));
         }
-        context.getSource().sendSuccess(msg, true);
+        context.getSource().sendSuccess(() -> msg, true);
         informPlayer(context, player, msg);
         return Command.SINGLE_SUCCESS;
     }
@@ -104,7 +104,7 @@ public class CommandPermission implements ICommand {
             DataManager.removePlayerPermission(player, Permission.CAN_USE_SERVER_WARP);
             msg = PERMISSIONS_CAN_USE_SERVER_WARP_REMOVED.get(getPlayerNameColored(player));
         }
-        context.getSource().sendSuccess(msg, true);
+        context.getSource().sendSuccess(() -> msg, true);
         informPlayer(context, player, msg);
         return Command.SINGLE_SUCCESS;
     }
@@ -120,7 +120,7 @@ public class CommandPermission implements ICommand {
             DataManager.removePlayerPermission(player, Permission.CAN_USE_MENU);
             msg = PERMISSIONS_CAN_USE_REMOVED.get(getPlayerNameColored(player));
         }
-        context.getSource().sendSuccess(msg, true);
+        context.getSource().sendSuccess(() -> msg, true);
         informPlayer(context, player, msg);
         return Command.SINGLE_SUCCESS;
     }

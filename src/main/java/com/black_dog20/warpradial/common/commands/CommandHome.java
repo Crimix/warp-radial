@@ -35,17 +35,17 @@ public class CommandHome implements ICommand {
 
     public int set(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        Level world = player.level;
+        Level world = player.level();
         WarpDestination destination = new WarpDestination(world.dimension(), player.blockPosition(), player.getYRot(), player.getXRot());
         DataManager.setHome(player, destination);
-        context.getSource().sendSuccess(SET_HOME.get(), Config.LOG_WARPS.get());
+        context.getSource().sendSuccess(SET_HOME::get, Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
     public int del(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         DataManager.deleteHome(player);
-        context.getSource().sendSuccess(DEL_HOME.get(), Config.LOG_WARPS.get());
+        context.getSource().sendSuccess(DEL_HOME::get, Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 }

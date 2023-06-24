@@ -66,10 +66,10 @@ public class CommandServerWarp implements ICommand {
     public int set(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         String warpName = MessageArgument.getMessage(context, "warpName").getString();
-        Level world = player.level;
+        Level world = player.level();
         WarpDestination destination = new WarpDestination(world.dimension(), player);
         DataManager.addServerWarp(player, warpName, destination);
-        context.getSource().sendSuccess(SET_WARP.get(warpName), Config.LOG_WARPS.get());
+        context.getSource().sendSuccess(() -> SET_WARP.get(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
@@ -77,7 +77,7 @@ public class CommandServerWarp implements ICommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
         String warpName = MessageArgument.getMessage(context, "warpName").getString();
         DataManager.deleteServerWarp(player, warpName);
-        context.getSource().sendSuccess(DEL_WARP.get(warpName), Config.LOG_WARPS.get());
+        context.getSource().sendSuccess(() -> DEL_WARP.get(warpName), Config.LOG_WARPS.get());
         return Command.SINGLE_SUCCESS;
     }
 
