@@ -1,5 +1,5 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.neoforged.gradle' version '[6.0.13, 6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
@@ -152,7 +152,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.mc_version}-${project.forge_version}"
+    minecraft "net.neoforged:forge:${mc_version}-${neo_version}"
 	
     compileOnly fg.deobf("com.black_dog20.bml:bml:${bml_version}")
     runtimeOnly fg.deobf("com.black_dog20.bml:bml:${bml_version}")
@@ -184,7 +184,6 @@ curseforge {
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 17'
-        addGameVersion '1.20'
         addGameVersion '1.20.1'
         relations {
             requiredDependency 'bml'
@@ -200,7 +199,7 @@ modrinth {
     changelog = "As always find the changelog here [CHANGELOG](${changelog_url})"
     versionType = "release"
     loaders = ["forge"]
-    gameVersions = ["1.20", "1.20.1"]
+    gameVersions = ["1.20.1"]
     dependencies {
         required.project "FbqCRYwN"
     }
