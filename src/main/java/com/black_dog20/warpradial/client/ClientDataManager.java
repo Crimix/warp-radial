@@ -7,8 +7,8 @@ import com.black_dog20.warpradial.common.util.data.Permission;
 import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;

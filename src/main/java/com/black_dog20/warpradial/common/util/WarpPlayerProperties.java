@@ -3,7 +3,7 @@ package com.black_dog20.warpradial.common.util;
 import com.black_dog20.warpradial.Config;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class WarpPlayerProperties {
 
@@ -16,9 +16,9 @@ public class WarpPlayerProperties {
 
         private final int configMode;
         private final String nbtTagKey;
-        private final ForgeConfigSpec.IntValue ticks;
+        private final ModConfigSpec.IntValue ticks;
 
-        Cooldown(int configModeToActive, String nbtTag, ForgeConfigSpec.IntValue cooldownTicks) {
+        Cooldown(int configModeToActive, String nbtTag, ModConfigSpec.IntValue cooldownTicks) {
             this.configMode = configModeToActive;
             this.nbtTagKey = nbtTag;
             this.ticks = cooldownTicks;

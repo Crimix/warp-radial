@@ -1,8 +1,8 @@
 package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.warpradial.Config;
-import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.Helper;
 import com.black_dog20.warpradial.common.util.PermissionHelper;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.mojang.brigadier.Command;
@@ -82,14 +82,14 @@ public class CommandServerWarp implements ICommand {
     }
 
     private boolean requirement(CommandSourceStack source) {
-        return source.hasPermission(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || source.hasPermission(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreateOrDelete(source);
+        return source.hasPermission(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || source.hasPermission(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || Helper.isSinglePlayer() || PermissionHelper.canCreateOrDelete(source);
     }
 
     private boolean requirementSet(CommandSourceStack source) {
-        return source.hasPermission(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canCreate(source);
+        return source.hasPermission(Config.SERVER_WARP_CREATE_PERMISSION_LEVEL.get()) || Helper.isSinglePlayer() || PermissionHelper.canCreate(source);
     }
 
     private boolean requirementDel(CommandSourceStack source) {
-        return source.hasPermission(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || WarpRadial.Proxy.isSinglePlayer() || PermissionHelper.canDelete(source);
+        return source.hasPermission(Config.SERVER_WARP_DELETE_PERMISSION_LEVEL.get()) || Helper.isSinglePlayer() || PermissionHelper.canDelete(source);
     }
 }

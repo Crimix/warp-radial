@@ -1,69 +1,91 @@
 package com.black_dog20.warpradial.common.network.packets;
 
+import com.black_dog20.bml.network.messages.api.PlayPacket;
 import com.black_dog20.bml.utils.player.TeleportationUtil;
 import com.black_dog20.warpradial.Config;
+import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.DataManager;
 import com.black_dog20.warpradial.common.util.TeleportationHelper;
 import com.black_dog20.warpradial.common.util.WarpPlayerProperties.Cooldown;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.*;
 
-public class PacketTeleportServerWarp {
+public class PacketTeleportServerWarp extends PlayPacket<PacketTeleportServerWarp.Data> {
 
-    private String warpName;
+    public static final ResourceLocation ID = new ResourceLocation(WarpRadial.MOD_ID, "teleport_server_warp");
 
-    public PacketTeleportServerWarp(String name) {
-        this.warpName = name;
+    public static final record Data(String warpName) implements CustomPacketPayload {
+
+        public Data(FriendlyByteBuf friendlyByteBuf) {
+            this(friendlyByteBuf.readUtf(32767));
+        }
+
+        @Override
+        public void write(FriendlyByteBuf pBuffer) {
+            pBuffer.writeUtf(warpName);
+        }
+
+        @Override
+        public @NotNull ResourceLocation id() {
+            return ID;
+        }
     }
 
-    public static void encode(PacketTeleportServerWarp msg, FriendlyByteBuf buffer) {
-        buffer.writeUtf(msg.warpName);
+    @Override
+    protected void handleClient(PacketTeleportServerWarp.Data payload, IPayloadContext context) {
+
     }
 
-    public static PacketTeleportServerWarp decode(FriendlyByteBuf buffer) {
-        return new PacketTeleportServerWarp(buffer.readUtf(32767));
+    @Override
+    protected void handleServer(PacketTeleportServerWarp.Data payload, IPayloadContext context) {
+        context.workHandler().execute(() -> PacketTeleportServerWarp.Handler.handle(payload, context));
     }
 
     public static class Handler {
-        public static void handle(PacketTeleportServerWarp msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> {
-                ServerPlayer player = ctx.get().getSender();
-                if (player == null)
-                    return;
+        public static void handle(PacketTeleportServerWarp.Data payload, IPayloadContext context) {
+            Optional<Player> optionalPlayer = context.player();
+            if (optionalPlayer.isEmpty())
+                return;
 
-                if (!Config.SERVER_WARPS_ALLOWED.get())
-                    return;
+            ServerPlayer player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(optionalPlayer.get().getUUID());
+            if (player == null)
+                return;
 
-                if (!TeleportationHelper.checkPermission(player))
-                    return;
+            if (!Config.SERVER_WARPS_ALLOWED.get())
+                return;
 
-                if (!TeleportationHelper.checkServerWarpPermission(player))
-                    return;
+            if (!TeleportationHelper.checkPermission(player))
+                return;
 
-                if (!TeleportationHelper.canTeleport(player, Cooldown.SERVER))
-                    return;
+            if (!TeleportationHelper.checkServerWarpPermission(player))
+                return;
 
-                Optional<WarpDestination> warp = DataManager.getServerWarpFor(msg.warpName);
+            if (!TeleportationHelper.canTeleport(player, Cooldown.SERVER))
+                return;
 
-                if (warp.isPresent()) {
-                    if (TeleportationUtil.teleportPlayerToDestination(player, warp.get())) {
-                        TeleportationHelper.handleCooldown(player, Cooldown.SERVER);
-                        player.sendSystemMessage(TELPORTED_TO_WARP.get(msg.warpName));
-                    } else {
-                        player.sendSystemMessage(COULD_NOT_TELEPORT.get());
-                    }
+            Optional<WarpDestination> warp = DataManager.getServerWarpFor(payload.warpName);
+
+            if (warp.isPresent()) {
+                if (TeleportationUtil.teleportPlayerToDestination(player, warp.get())) {
+                    TeleportationHelper.handleCooldown(player, Cooldown.SERVER);
+                    player.sendSystemMessage(TELPORTED_TO_WARP.get(payload.warpName));
                 } else {
-                    player.sendSystemMessage(NO_WARP.get());
+                    player.sendSystemMessage(COULD_NOT_TELEPORT.get());
                 }
-            });
-            ctx.get().setPacketHandled(true);
+            } else {
+                player.sendSystemMessage(NO_WARP.get());
+            }
         }
     }
 }

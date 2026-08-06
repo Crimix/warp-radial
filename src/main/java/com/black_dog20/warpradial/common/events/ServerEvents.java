@@ -1,16 +1,15 @@
 package com.black_dog20.warpradial.common.events;
 
-import com.black_dog20.bml.network.messages.PacketPermission;
+import com.black_dog20.bml.utils.network.NetworkUtils;
 import com.black_dog20.warpradial.WarpRadial;
-import com.black_dog20.warpradial.common.network.PacketHandler;
+import com.black_dog20.warpradial.common.network.packets.PacketWarpRadialPermission;
 import com.black_dog20.warpradial.common.util.DataManager;
-import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 @Mod.EventBusSubscriber(modid = WarpRadial.MOD_ID)
 public class ServerEvents {
@@ -22,7 +21,7 @@ public class ServerEvents {
             DataManager.syncPlayerWarpsToClient(playerEntity);
             DataManager.syncServerWarpsToClient(playerEntity);
 
-            PacketHandler.sendTo(new PacketPermission<>(PlayerPermissions.class, DataManager.getPlayerPermission(playerEntity)), playerEntity);
+            NetworkUtils.sendTo(new PacketWarpRadialPermission.Data(DataManager.getPlayerPermission(playerEntity)), playerEntity);
         }
     }
 

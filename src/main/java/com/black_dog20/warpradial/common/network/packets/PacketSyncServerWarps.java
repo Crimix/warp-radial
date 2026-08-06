@@ -1,86 +1,51 @@
 package com.black_dog20.warpradial.common.network.packets;
 
+import com.black_dog20.bml.utils.objects.Triple;
+import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.network.Handlers;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
-public class PacketSyncServerWarps {
+public class PacketSyncServerWarps extends BasePacketSyncWarps<PacketSyncServerWarps.Data> {
 
-    public static class Triple<A, B, C> {
-        private final A v1;
-        private final B v2;
-        private final C v3;
+    public static final ResourceLocation ID = new ResourceLocation(WarpRadial.MOD_ID, "send_sever_warps");
 
-        public Triple(A v1, B v2, C v3) {
-            this.v1 = v1;
-            this.v2 = v2;
-            this.v3 = v3;
+    public static PacketSyncServerWarps.Data create(Set<Map.Entry<String, WarpDestination>> warps) {
+        return new Data(getWarps(warps));
+    }
+
+    public static final record Data(List<Triple<String, String, Long>> warps) implements CustomPacketPayload {
+
+        public Data(FriendlyByteBuf friendlyByteBuf) {
+            this(readWraps(friendlyByteBuf));
         }
 
-        public A getFirst() {
-            return v1;
+        @Override
+        public void write(@NotNull FriendlyByteBuf pBuffer) {
+            writeWraps(warps, pBuffer);
         }
 
-        public B getSecond() {
-            return v2;
-        }
-
-        public C getThird() {
-            return v3;
+        @Override
+        public @NotNull ResourceLocation id() {
+            return ID;
         }
     }
 
-    private List<Triple<String, String, Long>> warps;
-
-    public PacketSyncServerWarps(Set<Map.Entry<String, WarpDestination>> warps) {
-        List<Triple<String, String, Long>> serverWarps = new ArrayList<>();
-        for (Map.Entry<String, WarpDestination> kvp : warps) {
-            String key = kvp.getKey();
-            WarpDestination value = kvp.getValue();
-            serverWarps.add(new Triple<>(key, value.getDimension().registry().getPath(), value.getTimestamp()));
-        }
-        this.warps = serverWarps;
+    @Override
+    protected void handleClient(PacketSyncServerWarps.Data payload, IPayloadContext context) {
+        context.workHandler().execute(() -> Handlers.handle(payload));
     }
 
-    public PacketSyncServerWarps(List<Triple<String, String, Long>> warps) {
-        this.warps = warps;
-    }
+    @Override
+    protected void handleServer(PacketSyncServerWarps.Data payload, IPayloadContext context) {
 
-    public List<PacketSyncServerWarps.Triple<String, String, Long>> getWarps() {
-        return warps;
-    }
-
-    public static void encode(PacketSyncServerWarps msg, FriendlyByteBuf buffer) {
-        buffer.writeInt(msg.warps.size());
-        for (Triple<String, String, Long> p : msg.warps) {
-            buffer.writeUtf(p.getFirst());
-            buffer.writeUtf(p.getSecond());
-            buffer.writeLong(p.getThird());
-        }
-    }
-
-    public static PacketSyncServerWarps decode(FriendlyByteBuf buffer) {
-        List<Triple<String, String, Long>> warps = new ArrayList<>();
-        int size = buffer.readInt();
-        for (int i = 0; i < size; i++) {
-            warps.add(new Triple<>(buffer.readUtf(32767), buffer.readUtf(32767), buffer.readLong()));
-        }
-        return new PacketSyncServerWarps(warps);
-    }
-
-    public static class Handler {
-        public static void handle(PacketSyncServerWarps msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Handlers.handle(msg)));
-            ctx.get().setPacketHandled(true);
-        }
     }
 }

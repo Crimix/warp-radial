@@ -2,14 +2,14 @@ package com.black_dog20.warpradial;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.nio.file.Path;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = WarpRadial.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
 
     public static final String CATEGORY_GENERAL = "general";
@@ -19,37 +19,37 @@ public class Config {
     public static final String CATEGORY_PLAYER_WARPS = "playerWarp";
     public static final String CATEGORY_ADMIN = "admin";
 
-    private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
-    private static final ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
+    private static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
 
     public static final int GLOBAL = 1;
     public static final int NO_COOLDOWN = 0;
     public static final int PER_CATEGORY_COOLDOWN = 2;
 
-    public static ForgeConfigSpec CLIENT_CONFIG;
-    public static ForgeConfigSpec SERVER_CONFIG;
+    public static ModConfigSpec CLIENT_CONFIG;
+    public static ModConfigSpec SERVER_CONFIG;
 
-    public static ForgeConfigSpec.BooleanValue RADIAL_SCROLL_INVERTED;
+    public static ModConfigSpec.BooleanValue RADIAL_SCROLL_INVERTED;
 
-    public static ForgeConfigSpec.BooleanValue PLAYER_WARPS_ALLOWED;
-    public static ForgeConfigSpec.BooleanValue WARP_TO_SPAWN_ALLOWED;
-    public static ForgeConfigSpec.BooleanValue HOMES_ALLOWED;
-    public static ForgeConfigSpec.BooleanValue SERVER_WARPS_ALLOWED;
-    public static ForgeConfigSpec.IntValue COOLDOWN_MODE;
-    public static ForgeConfigSpec.IntValue COOLDOWN_GLOBAL;
-    public static ForgeConfigSpec.IntValue COOLDOWN_SPAWN_WARP;
-    public static ForgeConfigSpec.IntValue COOLDOWN_HOME_WARP;
-    public static ForgeConfigSpec.IntValue COOLDOWN_PLAYER_WARP;
-    public static ForgeConfigSpec.IntValue COOLDOWN_SERVER_WARP;
-    public static ForgeConfigSpec.BooleanValue LOG_WARPS;
-    public static ForgeConfigSpec.BooleanValue ONLY_PERMISSION_PLAYERS_CAN_USE_MENU;
-    public static ForgeConfigSpec.BooleanValue ONLY_PERMISSION_PLAYERS_CAN_USE_SERVER_WARPS;
-    public static ForgeConfigSpec.BooleanValue INFORM_USER_OF_MISSING_PERMISSION;
-    public static ForgeConfigSpec.IntValue SERVER_WARP_CREATE_PERMISSION_LEVEL;
-    public static ForgeConfigSpec.IntValue SERVER_WARP_DELETE_PERMISSION_LEVEL;
-    public static ForgeConfigSpec.IntValue USE_MENU_PERMISSION_LEVEL;
-    public static ForgeConfigSpec.IntValue USE_SERVER_WARP_PERMISSION_LEVEL;
-    public static ForgeConfigSpec.IntValue PERMISSION_COMMAND_PERMISSION_LEVEL;
+    public static ModConfigSpec.BooleanValue PLAYER_WARPS_ALLOWED;
+    public static ModConfigSpec.BooleanValue WARP_TO_SPAWN_ALLOWED;
+    public static ModConfigSpec.BooleanValue HOMES_ALLOWED;
+    public static ModConfigSpec.BooleanValue SERVER_WARPS_ALLOWED;
+    public static ModConfigSpec.IntValue COOLDOWN_MODE;
+    public static ModConfigSpec.IntValue COOLDOWN_GLOBAL;
+    public static ModConfigSpec.IntValue COOLDOWN_SPAWN_WARP;
+    public static ModConfigSpec.IntValue COOLDOWN_HOME_WARP;
+    public static ModConfigSpec.IntValue COOLDOWN_PLAYER_WARP;
+    public static ModConfigSpec.IntValue COOLDOWN_SERVER_WARP;
+    public static ModConfigSpec.BooleanValue LOG_WARPS;
+    public static ModConfigSpec.BooleanValue ONLY_PERMISSION_PLAYERS_CAN_USE_MENU;
+    public static ModConfigSpec.BooleanValue ONLY_PERMISSION_PLAYERS_CAN_USE_SERVER_WARPS;
+    public static ModConfigSpec.BooleanValue INFORM_USER_OF_MISSING_PERMISSION;
+    public static ModConfigSpec.IntValue SERVER_WARP_CREATE_PERMISSION_LEVEL;
+    public static ModConfigSpec.IntValue SERVER_WARP_DELETE_PERMISSION_LEVEL;
+    public static ModConfigSpec.IntValue USE_MENU_PERMISSION_LEVEL;
+    public static ModConfigSpec.IntValue USE_SERVER_WARP_PERMISSION_LEVEL;
+    public static ModConfigSpec.IntValue PERMISSION_COMMAND_PERMISSION_LEVEL;
 
     static {
 
@@ -120,7 +120,7 @@ public class Config {
         SERVER_CONFIG = SERVER_BUILDER.build();
     }
 
-    public static void loadConfig(ForgeConfigSpec spec, Path path) {
+    public static void loadConfig(ModConfigSpec spec, Path path) {
 
         final CommentedFileConfig configData = CommentedFileConfig.builder(path)
                 .sync()

@@ -1,6 +1,9 @@
 # Warp Radial Changelog
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [1.20.4, 1.0.3] - 2026-08-06
+- Port to 1.20.4 (NeoForge)
+
 ## [1.20.1, 1.0.3] - 2023-09-17
 - Port to 1.20.1 (NeoForge)
 

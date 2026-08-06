@@ -1,7 +1,7 @@
 package com.black_dog20.warpradial.client.radial.items;
 
 import com.black_dog20.bml.client.radial.items.TextRadialItem;
-import com.black_dog20.warpradial.common.network.PacketHandler;
+import com.black_dog20.bml.utils.network.NetworkUtils;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportSpawn;
 import net.minecraft.network.chat.Component;
 
@@ -19,7 +19,7 @@ public class SpawnRadialItem extends TextRadialItem {
 
     @Override
     public void click() {
-        PacketHandler.sendToServer(new PacketTeleportSpawn());
+        NetworkUtils.sendToServer(new PacketTeleportSpawn.Data());
     }
 
     @Override

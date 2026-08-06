@@ -3,8 +3,8 @@ package com.black_dog20.warpradial.client.radial.items;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.client.radial.items.TextRadialItem;
 import com.black_dog20.bml.utils.dimension.DimensionUtil;
+import com.black_dog20.bml.utils.network.NetworkUtils;
 import com.black_dog20.warpradial.client.ClientDataManager;
-import com.black_dog20.warpradial.common.network.PacketHandler;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportServerWarp;
 import com.black_dog20.warpradial.common.util.TranslationHelper;
 import com.black_dog20.warpradial.common.util.data.Permission;
@@ -46,7 +46,7 @@ public class ClientServerDestination extends TextRadialItem {
 
     @Override
     public void click() {
-        PacketHandler.sendToServer(new PacketTeleportServerWarp(name));
+        NetworkUtils.sendToServer(new PacketTeleportServerWarp.Data(name));
     }
 
     @Override

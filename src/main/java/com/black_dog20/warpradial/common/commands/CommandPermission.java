@@ -2,8 +2,8 @@ package com.black_dog20.warpradial.common.commands;
 
 import com.black_dog20.bml.utils.text.TextComponentBuilder;
 import com.black_dog20.warpradial.Config;
-import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.DataManager;
+import com.black_dog20.warpradial.common.util.Helper;
 import com.black_dog20.warpradial.common.util.data.Permission;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -126,7 +126,7 @@ public class CommandPermission implements ICommand {
     }
 
     private boolean isSp() {
-        return WarpRadial.Proxy.isSinglePlayer();
+        return Helper.isSinglePlayer();
     }
 
     private void informPlayer(CommandContext<CommandSourceStack> context, ServerPlayer player, Component msg) throws CommandSyntaxException {

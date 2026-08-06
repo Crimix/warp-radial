@@ -3,7 +3,7 @@ package com.black_dog20.warpradial.client.radial.items;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.client.radial.items.TextRadialItem;
 import com.black_dog20.bml.utils.dimension.DimensionUtil;
-import com.black_dog20.warpradial.common.network.PacketHandler;
+import com.black_dog20.bml.utils.network.NetworkUtils;
 import com.black_dog20.warpradial.common.network.packets.PacketTeleportPlayerWarp;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.ChatFormatting;
@@ -42,7 +42,7 @@ public class ClientPlayerDestination extends TextRadialItem {
 
     @Override
     public void click() {
-        PacketHandler.sendToServer(new PacketTeleportPlayerWarp(name));
+        NetworkUtils.sendToServer(new PacketTeleportPlayerWarp.Data(name));
     }
 
     @Override

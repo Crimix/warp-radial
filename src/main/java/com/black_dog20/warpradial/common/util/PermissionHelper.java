@@ -1,7 +1,6 @@
 package com.black_dog20.warpradial.common.util;
 
 import com.black_dog20.warpradial.Config;
-import com.black_dog20.warpradial.WarpRadial;
 import com.black_dog20.warpradial.common.util.data.Permission;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
@@ -32,7 +31,7 @@ public class PermissionHelper {
         if (!Config.ONLY_PERMISSION_PLAYERS_CAN_USE_MENU.get())
             return true;
         try {
-            return source.hasPermission(2) || WarpRadial.Proxy.isSinglePlayer() || DataManager.playerHasPermission(source.getPlayerOrException(), Permission.CAN_USE_MENU);
+            return source.hasPermission(2) || Helper.isSinglePlayer() || DataManager.playerHasPermission(source.getPlayerOrException(), Permission.CAN_USE_MENU);
         } catch (CommandSyntaxException e) {
             return false;
         }

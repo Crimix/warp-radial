@@ -1,19 +1,18 @@
 package com.black_dog20.warpradial.common.util;
 
 
-import com.black_dog20.bml.network.messages.PacketPermission;
 import com.black_dog20.bml.utils.file.FileUtil;
-import com.black_dog20.warpradial.common.network.PacketHandler;
+import com.black_dog20.bml.utils.network.NetworkUtils;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncPlayerWarps;
 import com.black_dog20.warpradial.common.network.packets.PacketSyncServerWarps;
+import com.black_dog20.warpradial.common.network.packets.PacketWarpRadialPermission;
 import com.black_dog20.warpradial.common.util.data.Permission;
 import com.black_dog20.warpradial.common.util.data.PlayerPermissions;
 import com.black_dog20.warpradial.common.util.data.WarpDestination;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.fml.util.thread.EffectiveSide;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -203,18 +202,18 @@ public class DataManager {
     }
 
     public static void syncServerWarpsToClient(ServerPlayer playerEntity) {
-        PacketHandler.sendTo(new PacketSyncServerWarps(SERVER_WARPS.entrySet()), playerEntity);
+        NetworkUtils.sendTo(PacketSyncServerWarps.create(SERVER_WARPS.entrySet()), playerEntity);
     }
 
     public static void syncServerWarpsToClients() {
-        PacketHandler.NETWORK.send(PacketDistributor.ALL.noArg(), new PacketSyncServerWarps(SERVER_WARPS.entrySet()));
+        NetworkUtils.sendToAll(PacketSyncServerWarps.create(SERVER_WARPS.entrySet()));
     }
 
     public static void syncPlayerWarpsToClient(ServerPlayer playerEntity) {
         String UUID = playerEntity.getUUID().toString();
         if (PLAYER_WARPS.containsKey(UUID)) {
             ConcurrentHashMap<String, WarpDestination> temp = PLAYER_WARPS.get(UUID);
-            PacketHandler.sendTo(new PacketSyncPlayerWarps(temp.entrySet()), playerEntity);
+            NetworkUtils.sendTo(PacketSyncPlayerWarps.create(temp.entrySet()), playerEntity);
         }
     }
 
@@ -252,7 +251,7 @@ public class DataManager {
 
     public static void syncPermissionsToClient(ServerPlayer playerEntity) {
         PlayerPermissions playerPermissions = getPlayerPermission(playerEntity);
-        PacketHandler.sendTo(new PacketPermission<>(PlayerPermissions.class, playerPermissions), playerEntity);
+        NetworkUtils.sendTo(new PacketWarpRadialPermission.Data(playerPermissions), playerEntity);
     }
 
     private static ServerLevel getServerWorld(ServerPlayer playerEntity) {

@@ -6,7 +6,7 @@ import com.black_dog20.warpradial.common.util.data.Permission;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import static com.black_dog20.warpradial.common.util.TranslationHelper.Translations.*;
 
