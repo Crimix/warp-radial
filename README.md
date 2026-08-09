@@ -1,5 +1,5 @@
-[![](https://img.shields.io/curseforge/dt/375446?style=flat&logo=curseforge&logoColor=%23F16436)](https://www.curseforge.com/minecraft/mc-mods/bml)
-[![](https://img.shields.io/modrinth/dt/KZhrfAvS?style=flat&logo=modrinth&logoColor=%2300AF5C)](https://modrinth.com/mod/bml)
+[![](https://img.shields.io/curseforge/dt/375446?style=flat&logo=curseforge&logoColor=%23F16436)](https://www.curseforge.com/minecraft/mc-mods/jet-boots)
+[![](https://img.shields.io/modrinth/dt/KZhrfAvS?style=flat&logo=modrinth&logoColor=%2300AF5C)](https://modrinth.com/mod/jet-boots)
 
 # Warp Radial
 [Warp Radial](https://www.curseforge.com/minecraft/mc-mods/warp-radial) is inspired by older versions of FTB-Utilities where you could add warp points and there were this really nice radial menu to select the warp point to teleport to.  
